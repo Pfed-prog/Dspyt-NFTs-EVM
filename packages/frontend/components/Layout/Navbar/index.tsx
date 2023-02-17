@@ -111,6 +111,8 @@ export function Navbar({ links }: NavbarProps) {
 
   const [connectionStatus, setConnectionStatus] = useState("Disconnected");
 
+  console.log(isActive);
+
   const handleToggleConnect = () => {
     if (isActive) {
       if (connector?.deactivate) {
@@ -160,9 +162,20 @@ export function Navbar({ links }: NavbarProps) {
         <Group spacing={5} className={classes.links}>
           {items}
         </Group>
-        <Group spacing={5}>
-          <Button onClick={() => handleToggleConnect()}>
-            {connectionStatus}
+        <Group spacing={10}>
+          <Button
+            styles={{
+              root: {
+                backgroundColor: "#0D67FE",
+
+                "&:hover": {
+                  backgroundColor: "#0546B7",
+                },
+              },
+            }}
+            onClick={() => handleToggleConnect()}
+          >
+            {"Login with Unstoppable"}
           </Button>
           <ConnectButton
             accountStatus={{

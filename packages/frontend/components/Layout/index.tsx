@@ -11,7 +11,7 @@ const LayoutApp = ({ children }: LayoutProps) => {
       header={
         <Navbar
           links={[
-            { label: "Home", link: "/" },
+            //{ label: "Home", link: "/" },
             { label: "Upload", link: "/upload" },
             { label: "Profile", link: "/profile" },
           ]}
