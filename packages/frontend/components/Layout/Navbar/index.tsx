@@ -1,3 +1,4 @@
+import connectors from "@/utils/connectors.js";
 import {
   createStyles,
   Text,
@@ -7,12 +8,14 @@ import {
   Burger,
   Paper,
   Transition,
+  Button,
 } from "@mantine/core";
 import { useBooleanToggle } from "@mantine/hooks";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 const HEADER_HEIGHT = 60;
 
@@ -100,6 +103,32 @@ interface NavbarProps {
 }
 
 export function Navbar({ links }: NavbarProps) {
+  const connector = connectors["UAuth"][0];
+
+  const { useIsActivating, useIsActive } = connectors["UAuth"][1];
+  const isActivating = useIsActivating();
+  const isActive = useIsActive();
+
+  const [connectionStatus, setConnectionStatus] = useState("Disconnected");
+
+  const handleToggleConnect = () => {
+    if (isActive) {
+      if (connector?.deactivate) {
+        void connector.deactivate();
+      } else {
+        void connector.resetState();
+      }
+      setConnectionStatus("Disconnected");
+    } else if (!isActivating) {
+      setConnectionStatus("Connecting...");
+
+      // Activate the connector and update states
+      connector.activate(1);
+
+      setConnectionStatus("Connected");
+    }
+  };
+
   const [opened, toggleOpened] = useBooleanToggle(false);
   const { classes, cx } = useStyles();
   const router = useRouter();
@@ -132,6 +161,9 @@ export function Navbar({ links }: NavbarProps) {
           {items}
         </Group>
         <Group spacing={5}>
+          <Button onClick={() => handleToggleConnect()}>
+            {connectionStatus}
+          </Button>
           <ConnectButton
             accountStatus={{
               smallScreen: "avatar",
