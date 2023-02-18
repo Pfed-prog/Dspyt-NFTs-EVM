@@ -111,8 +111,6 @@ export function Navbar({ links }: NavbarProps) {
 
   const [connectionStatus, setConnectionStatus] = useState("Disconnected");
 
-  console.log(isActive);
-
   const handleToggleConnect = () => {
     if (isActive) {
       if (connector?.deactivate) {
@@ -123,11 +121,17 @@ export function Navbar({ links }: NavbarProps) {
       setConnectionStatus("Disconnected");
     } else if (!isActivating) {
       setConnectionStatus("Connecting...");
+      const getPromise = () => {
+        return Promise.resolve(connector.activate(1));
+      };
 
-      // Activate the connector and update states
-      connector.activate(1);
-
-      setConnectionStatus("Connected");
+      getPromise()
+        .then(() => {
+          setConnectionStatus("Connected");
+        })
+        .catch(() => {
+          connector.resetState();
+        });
     }
   };
 
@@ -167,7 +171,6 @@ export function Navbar({ links }: NavbarProps) {
             styles={{
               root: {
                 backgroundColor: "#0D67FE",
-
                 "&:hover": {
                   backgroundColor: "#0546B7",
                 },
@@ -180,7 +183,11 @@ export function Navbar({ links }: NavbarProps) {
           <ConnectButton
             accountStatus={{
               smallScreen: "avatar",
-              largeScreen: "full",
+              largeScreen: "avatar",
+            }}
+            showBalance={{
+              smallScreen: false,
+              largeScreen: false,
             }}
           />
           <Burger
