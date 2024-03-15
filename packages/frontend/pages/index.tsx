@@ -23,28 +23,31 @@ const Home: NextPage = () => {
   } = usePosts("optimism");
   return (
     <div>
-      <Center>
-        {posts?.pages.map((page, i: number) => (
-          <Box
-            mx="auto"
-            sx={{
-              maxWidth: 1500,
-              gap: 20,
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 5fr))",
-              gridTemplateRows: "masonry",
-            }}
-            key={i}
-          >
-            {page.items.map((post: Post) => {
-              return <PostCard post={post} key={post.token_id} />;
-            })}
-          </Box>
-        ))}
-      </Center>
+      {posts?.pages.map((page: any, i: number) => (
+        <Box
+          mx="auto"
+          sx={{
+            maxWidth: 1500,
+            gap: 20,
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 5fr))",
+            gridTemplateRows: "masonry",
+          }}
+          key={i}
+        >
+          {page.items?.map((post: Post) => {
+            return <PostCard post={post} key={post.token_id} />;
+          })}
+        </Box>
+      ))}
+
       {!posts && isLoading && (
         <Center>
-          <Stack>
+          <Stack
+            sx={{
+              maxWidth: 700,
+            }}
+          >
             <Title order={1}>PinSave Home Page</Title>
             <Text>Loading decentralized PinSave Posts</Text>
             <LoadingOverlay visible={isLoading} />
