@@ -1,5 +1,6 @@
-import { ChainName } from "@/constants/chains";
 import { NextRouter } from "next/router";
+
+import { ChainName } from "@/constants/chains";
 
 export const sendMessage = async function (
   context: string,

@@ -1,9 +1,10 @@
-import { CHAINS, type ChainName } from "@/constants/chains";
 import type { Chain } from "wagmi";
+
+import { CHAINS, type ChainName } from "@/constants/chains";
 
 export const getCurrentChain = (chainId: number) => {
   return Object.keys(CHAINS).find(
-    (key) => CHAINS[key as keyof typeof CHAINS] === chainId,
+    (key) => CHAINS[key as keyof typeof CHAINS] === chainId
   ) as ChainName;
 };
 
