@@ -20,7 +20,7 @@ import { NFTStorage } from "nft.storage";
 import { useAccount } from "wagmi";
 import React, { useState, useEffect } from "react";
 
-let orbis = new Orbis();
+const orbis = new Orbis();
 
 const Upload = () => {
   const [cover, setCover] = useState<File | undefined>();

@@ -26,7 +26,7 @@ class MyDocument extends Document {
             property="og:image"
             content="https://pinsave.app/TwitterIconWords.png"
           />
-          <meta property="og:url" content="https://pinsave.app/" />
+          <meta property="og:url" content="https://evm.pinsave.app/" />
           <meta
             property="og:title"
             content="Pin Save - decentralized Pinterest"

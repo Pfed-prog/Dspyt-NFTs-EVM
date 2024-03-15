@@ -1,12 +1,12 @@
-import { getChainApiRouteName } from "@/utils/chains";
-import { IsNotMp4 } from "@/utils/media";
-import type { Post } from "@/services/upload";
-
 import { Player } from "@livepeer/react";
 import { Paper, Text } from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
 import { useNetwork, Chain } from "wagmi";
+
+import { getChainApiRouteName } from "@/utils/chains";
+import { IsNotMp4 } from "@/utils/media";
+import type { Post } from "@/services/upload";
 
 interface IMyProps {
   post: Post;
@@ -14,7 +14,6 @@ interface IMyProps {
 
 const PostCard: React.FC<IMyProps> = ({ post }) => {
   const { chain } = useNetwork();
-
   return (
     <Link
       href={`/${getChainApiRouteName(chain as Chain)}/posts/${post.token_id}`}

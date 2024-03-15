@@ -1,18 +1,24 @@
+import type { NextPage } from "next";
+import {
+  Box,
+  Button,
+  Center,
+  Title,
+  Text,
+  Stack,
+  LoadingOverlay,
+} from "@mantine/core";
+import { useNetwork, Chain } from "wagmi";
+
+import type { Post } from "@/services/upload";
+import type { ChainName } from "@/constants/chains";
 import PostCard from "@/components/Posts/PostCard";
 import { usePosts } from "@/hooks/api";
 import { getChainApiRouteName } from "@/utils/chains";
-import type { Post } from "@/services/upload";
-import type { ChainName } from "@/constants/chains";
-
-import { Box, Button, Center, Title, Text, Stack } from "@mantine/core";
-import { useNetwork, Chain } from "wagmi";
-import type { NextPage } from "next";
 
 const Home: NextPage = () => {
   const { chain } = useNetwork();
-
   const initialChain: ChainName = getChainApiRouteName(chain as Chain);
-
   const {
     data: posts,
     isFetching: isLoading,
@@ -20,7 +26,6 @@ const Home: NextPage = () => {
     hasNextPage,
     isFetchingNextPage,
   } = usePosts(initialChain);
-
   return (
     <div>
       <Center>
@@ -45,8 +50,9 @@ const Home: NextPage = () => {
       {!posts && isLoading && (
         <Center>
           <Stack>
-            <Title order={1}> PinSave Home Page</Title>
-            <Text> Loading decentralized PinSave Posts</Text>
+            <Title order={1}>PinSave Home Page</Title>
+            <Text>Loading decentralized PinSave Posts</Text>
+            <LoadingOverlay visible />
           </Stack>
         </Center>
       )}

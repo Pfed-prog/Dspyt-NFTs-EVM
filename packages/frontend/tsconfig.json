@@ -30,8 +30,7 @@
     "environment.d.ts",
     "Orbis.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    "pages/mina.jsx"
+    "**/*.tsx"
   ],
   "exclude": ["node_modules"]
 }

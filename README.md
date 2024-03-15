@@ -63,8 +63,7 @@ yarn dev
 - Removed faulty ipfs servers.
 - Added Optimism mainnet blockchain.
 - Upgraded solidity contract to set the minting fee.
-- Migrated to [https://pinsave.app](https://pinsave.app).
-- Experimenting with Mina merkle trees.
+- Migrated to [https://evm.pinsave.app](https://evm.pinsave.app).
 
 ## Further Resources
 

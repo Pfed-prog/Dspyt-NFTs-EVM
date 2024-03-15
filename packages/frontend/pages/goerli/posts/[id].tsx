@@ -1,27 +1,24 @@
-import MediaDetails from "@/components/Post/MediaDetails";
-import DisplayMedia from "@/components/Post/DisplayMedia";
-import { usePost } from "@/hooks/api";
-import { getCurrentChain } from "@/utils/chains";
-
 import { ActionIcon, SimpleGrid, LoadingOverlay } from "@mantine/core";
 import { useRouter } from "next/router";
 import { ArrowLeft } from "tabler-icons-react";
 import { ChainName } from "@/constants/chains";
 
+import MediaDetails from "@/components/Post/MediaDetails";
+import DisplayMedia from "@/components/Post/DisplayMedia";
+import { usePost } from "@/hooks/api";
+
 const PostPage = () => {
   const router = useRouter();
-  const currentChain: ChainName = getCurrentChain(5);
-
+  const currentChain: ChainName = "goerli";
   const { data: postQueried, isLoading } = usePost(
     currentChain,
-    String(router.query.id),
+    String(router.query.id)
   );
-
   return (
     <div>
       <LoadingOverlay visible={isLoading} />
       {postQueried && (
-        <>
+        <div>
           <ActionIcon
             onClick={() => router.back()}
             mb="md"
@@ -41,7 +38,7 @@ const PostPage = () => {
             <DisplayMedia post={postQueried} />
             <MediaDetails post={postQueried} currentChain={currentChain} />
           </SimpleGrid>
-        </>
+        </div>
       )}
     </div>
   );
