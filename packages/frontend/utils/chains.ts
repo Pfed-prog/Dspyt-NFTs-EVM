@@ -11,6 +11,5 @@ export const getCurrentChain = (chainId: number) => {
 export function getChainApiRouteName(chain: Chain): ChainName {
   const chainName = getCurrentChain(chain?.id);
   if (chainName) return chainName;
-
   return "optimism";
 }

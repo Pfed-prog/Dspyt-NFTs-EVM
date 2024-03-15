@@ -8,24 +8,19 @@ import {
   Stack,
   LoadingOverlay,
 } from "@mantine/core";
-import { useNetwork, Chain } from "wagmi";
 
 import type { Post } from "@/services/upload";
-import type { ChainName } from "@/constants/chains";
 import PostCard from "@/components/Posts/PostCard";
 import { usePosts } from "@/hooks/api";
-import { getChainApiRouteName } from "@/utils/chains";
 
 const Home: NextPage = () => {
-  const { chain } = useNetwork();
-  const initialChain: ChainName = getChainApiRouteName(chain as Chain);
   const {
     data: posts,
     isFetching: isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = usePosts(initialChain);
+  } = usePosts("optimism");
   return (
     <div>
       <Center>
@@ -52,7 +47,7 @@ const Home: NextPage = () => {
           <Stack>
             <Title order={1}>PinSave Home Page</Title>
             <Text>Loading decentralized PinSave Posts</Text>
-            <LoadingOverlay visible />
+            <LoadingOverlay visible={isLoading} />
           </Stack>
         </Center>
       )}
