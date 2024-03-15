@@ -47,18 +47,6 @@ Pin Save is a decentralized image, video sharing and content aggregation platfor
 
 ![Video Player](https://bafybeiacg6yoxvxvk2ayugwlcfnnjpm5kcchvy3t2fl7mu64ft4zt4fs6m.ipfs.nftstorage.link/)
 
-## Experimental Features
-
-- Mina Merkle Trees:
-
-![Mina Merkle Trees](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/Mina.png)
-
-- Mina App State API:
-
-`localhost:3000/api/mina` route displays Mina Contract App state
-
-![Mina Api](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/MinaApi.png)
-
 ## Setup
 
 To run this project and start the project in development mode, install it locally using `yarn` and run `yarn dev`:
@@ -75,8 +63,7 @@ yarn dev
 - Removed faulty ipfs servers.
 - Added Optimism mainnet blockchain.
 - Upgraded solidity contract to set the minting fee.
-- Migrated to [https://pinsave.app](https://pinsave.app).
-- Experimenting with Mina merkle trees.
+- Migrated to [https://evm.pinsave.app](https://evm.pinsave.app).
 
 ## Further Resources
 

@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
-import LayoutApp from "@/components/Layout";
+
 import {
   LivepeerConfig,
   createReactClient,
@@ -18,6 +18,8 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 import type { NextComponentType } from "next";
 import type AppProps from "next/app";
+
+import LayoutApp from "@/components/Layout";
 
 type NextAppProps<P = any> = AppProps & {
   pageProps: P;
@@ -44,7 +46,7 @@ const { chains, publicClient } = configureChains(
 
 const { connectors } = getDefaultWallets({
   appName: "PinSave",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID as string,
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID,
   chains,
 });
 

@@ -1,5 +1,3 @@
-import { useProfile } from "@/hooks/api";
-
 import {
   BackgroundImage,
   Box,
@@ -14,14 +12,14 @@ import {
 import { useRouter } from "next/router";
 import Image from "next/image";
 
+import { useProfile } from "@/hooks/api";
+
 function Post() {
   const router = useRouter();
   const { address } = router.query;
-
   const { data: profileQueried, isLoading } = useProfile(String(address));
-
   return (
-    <>
+    <div>
       {profileQueried ? (
         <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
           <BackgroundImage
@@ -101,7 +99,7 @@ function Post() {
       ) : (
         <LoadingOverlay visible={isLoading} />
       )}
-    </>
+    </div>
   );
 }
 
