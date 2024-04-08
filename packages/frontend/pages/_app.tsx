@@ -1,6 +1,8 @@
 import "@/styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
+import type { NextComponentType } from "next";
+import type AppProps from "next/app";
 import {
   LivepeerConfig,
   createReactClient,
@@ -13,11 +15,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import NextHead from "next/head";
 import { useMemo } from "react";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { Chain, goerli, optimism } from "wagmi/chains";
+import { Chain, optimism } from "wagmi/chains";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
-import type { NextComponentType } from "next";
-import type AppProps from "next/app";
 
 import LayoutApp from "@/components/Layout";
 
@@ -33,7 +33,7 @@ export interface MyWalletOptions {
 }
 
 const { chains, publicClient } = configureChains(
-  [optimism, goerli],
+  [optimism],
   [
     publicProvider(),
     jsonRpcProvider({

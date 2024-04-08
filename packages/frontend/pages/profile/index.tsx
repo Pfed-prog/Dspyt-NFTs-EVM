@@ -173,19 +173,18 @@ const Upload = () => {
                     height: 400,
                   }}
                 >
-                  <Image
-                    height={600}
-                    width={550}
-                    src={user.details.profile?.pfp ?? "/PinSaveCard.png"}
-                    alt={user.details.profile?.username ?? "user"}
-                    style={{
-                      width: "auto",
-                      height: "50%",
-                      borderRadius: "10px",
-                      marginTop: "10px",
-                    }}
-                  />
-
+                  <Center>
+                    <Image
+                      height={200}
+                      width={200}
+                      src={user.details.profile?.pfp ?? "/Rectangle.png"}
+                      alt={user.details.profile?.username ?? "user"}
+                      style={{
+                        borderRadius: "10px",
+                        marginTop: "10px",
+                      }}
+                    />
+                  </Center>
                   <Card
                     shadow="sm"
                     p="lg"

@@ -9,10 +9,9 @@ export const sendMessage = async function (
   newMessage: string,
   tag: string,
   address: `0x${string}`,
-  currentChain: ChainName,
-  setOrbisResponse: React.Dispatch<any>
+  currentChain: ChainName
 ) {
-  let response: any;
+  let response: IOrbisResponse;
   if (isEncrypted) {
     response = await orbis.createPost(
       {
@@ -42,23 +41,15 @@ export const sendMessage = async function (
       tags: [{ slug: tag, title: tag }],
     });
   }
-  setTimeout(() => {
-    setOrbisResponse(response);
-  }, 3000);
-
   return true;
 };
 
 export const sendReaction = async function (
   id: string,
   reaction: string,
-  orbis: IOrbis,
-  setOrbisResponse: React.Dispatch<any>
+  orbis: IOrbis
 ) {
-  const response = await orbis.react(id, reaction);
-  setTimeout(() => {
-    setOrbisResponse(response);
-  }, 1000);
+  const response: IOrbisResponse = await orbis.react(id, reaction);
 };
 
 export const getMessage = async function (content: any, orbis: IOrbis) {
