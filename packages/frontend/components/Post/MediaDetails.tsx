@@ -1,11 +1,4 @@
-import { timeConverter } from "@/utils/time";
-import { getContractInfo } from "@/utils/contracts";
-import { sendMessage, sendReaction } from "@/services/orbis";
-import type { ChainName } from "@/constants/chains";
-import type { IndividualPost } from "@/services/upload";
-import { useMessages } from "@/hooks/api";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Paper,
   Button,
@@ -23,6 +16,13 @@ import { Orbis } from "@orbisclub/orbis-sdk";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 
+import type { ChainName } from "@/constants/chains";
+import type { IndividualPost } from "@/services/upload";
+import { timeConverter } from "@/utils/time";
+import { getContractInfo } from "@/utils/contracts";
+import { sendMessage, sendReaction } from "@/services/orbis";
+import { useMessages } from "@/hooks/api";
+
 const context =
   "kjzl6cwe1jw147hcck185xfdlrxq9zv0y0hoa6shzskqfnio56lhf8190yaei7w";
 
@@ -38,13 +38,18 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
 
   const [newMessage, setNewMessage] = useState<string>("");
 
-  const [orbisResponse, setOrbisResponse] = useState<any>();
-
   const { address } = getContractInfo();
 
   const { isConnected } = useAccount();
 
-  const { data: messagesQueried, isLoading } = useMessages("0");
+  const { data: messagesQueried, refetch } = useMessages("0");
+
+  useEffect(() => {
+    async function connectOrbis() {
+      await orbis.connect_v2({ chain: "ethereum", lit: false });
+    }
+    connectOrbis();
+  }, []);
 
   return (
     <Paper shadow="sm" p="md" withBorder>
@@ -82,7 +87,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
               <Image
                 width={36}
                 height={30}
-                src={message.creator_details.profile?.pfp}
+                src={message.creator_details.profile?.pfp ?? "/Pin.png"}
                 alt="profile"
                 unoptimized={true}
                 style={{
@@ -113,8 +118,12 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
               component="a"
               radius="sm"
               rightIcon={<Heart fill="white" />}
-              onClick={() =>
-                sendReaction(message.stream_id, "like", orbis, setOrbisResponse)
+              onClick={async () =>
+                await sendReaction(message.stream_id, "like", orbis).then(() =>
+                  setTimeout(() => {
+                    refetch();
+                  }, 1000)
+                )
               }
             >
               {message.count_likes}
@@ -126,7 +135,11 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
               rightIcon={<FaLaughSquint size={22} />}
               ml={4}
               onClick={() =>
-                sendReaction(message.stream_id, "haha", orbis, setOrbisResponse)
+                sendReaction(message.stream_id, "haha", orbis).then(() =>
+                  setTimeout(() => {
+                    refetch();
+                  }, 1000)
+                )
               }
             >
               {message.count_haha}
@@ -139,11 +152,10 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
               ml={4}
               rightIcon={<BiDislike size={22} />}
               onClick={() =>
-                sendReaction(
-                  message.stream_id,
-                  "downvote",
-                  orbis,
-                  setOrbisResponse
+                sendReaction(message.stream_id, "downvote", orbis).then(() =>
+                  setTimeout(() => {
+                    refetch();
+                  }, 1000)
                 )
               }
             >
@@ -178,8 +190,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
               newMessage,
               currentChain,
               address,
-              currentChain,
-              setOrbisResponse
+              currentChain
             )) && setNewMessage("")
           }
         >
