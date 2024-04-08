@@ -1,5 +1,0 @@
-.env
-*.log
-keys/*
-config.json
-.prettierrc
