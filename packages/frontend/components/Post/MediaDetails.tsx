@@ -16,11 +16,13 @@ import { Orbis } from "@orbisclub/orbis-sdk";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 
-import type { ChainName } from "@/constants/chains";
 import type { IndividualPost } from "@/services/upload";
 import { timeConverter } from "@/utils/time";
-import { getContractInfo } from "@/utils/contracts";
-import { sendMessage, sendReaction } from "@/services/orbis";
+import {
+  sendMessage,
+  sendReaction,
+  sendEncryptedMessage,
+} from "@/services/orbis";
 import { useMessages } from "@/hooks/api";
 
 const context =
@@ -28,25 +30,21 @@ const context =
 
 interface IMyProps {
   post: IndividualPost;
-  currentChain: ChainName;
+  orbisTag: string;
 }
 
 const orbis: IOrbis = new Orbis();
 
-const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
+const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
   const [isEncrypted, setIsEncrypted] = useState(false);
-
   const [newMessage, setNewMessage] = useState<string>("");
 
-  const { address } = getContractInfo();
-
   const { isConnected } = useAccount();
-
-  const { data: messagesQueried, refetch } = useMessages("0");
+  const { data: messagesQueried, refetch } = useMessages(orbisTag);
 
   useEffect(() => {
     async function connectOrbis() {
-      await orbis.connect_v2({ chain: "ethereum", lit: false });
+      await orbis.connect_v2({ chain: "ethereum", lit: true });
     }
     connectOrbis();
   }, []);
@@ -108,7 +106,10 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
                     message.creator.indexOf(":0x") + 8
                   ) + "..."}
               </a>
-              : {message.content.body}
+              :
+              {message.content.encryptedBody
+                ? "Lit Encrypted"
+                : message.content.body}
             </Text>
           </Group>
           <Group>
@@ -134,8 +135,8 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
               radius="sm"
               rightIcon={<FaLaughSquint size={22} />}
               ml={4}
-              onClick={() =>
-                sendReaction(message.stream_id, "haha", orbis).then(() =>
+              onClick={async () =>
+                await sendReaction(message.stream_id, "haha", orbis).then(() =>
                   setTimeout(() => {
                     refetch();
                   }, 1000)
@@ -151,11 +152,12 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
               radius="sm"
               ml={4}
               rightIcon={<BiDislike size={22} />}
-              onClick={() =>
-                sendReaction(message.stream_id, "downvote", orbis).then(() =>
-                  setTimeout(() => {
-                    refetch();
-                  }, 1000)
+              onClick={async () =>
+                await sendReaction(message.stream_id, "downvote", orbis).then(
+                  () =>
+                    setTimeout(() => {
+                      refetch();
+                    }, 1000)
                 )
               }
             >
@@ -179,23 +181,41 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
         <Switch onClick={() => setIsEncrypted((prevCheck) => !prevCheck)} />
       </Group>
       {isConnected ? (
-        <Button
-          component="a"
-          radius="lg"
-          onClick={async () =>
-            (await sendMessage(
-              context,
-              isEncrypted,
-              orbis,
-              newMessage,
-              currentChain,
-              address,
-              currentChain
-            )) && setNewMessage("")
-          }
-        >
-          Send Message
-        </Button>
+        isEncrypted ? (
+          <Button
+            component="a"
+            radius="lg"
+            onClick={async () =>
+              (await sendEncryptedMessage(
+                context,
+                orbis,
+                newMessage,
+                orbisTag
+              ).then(() =>
+                setTimeout(() => {
+                  refetch();
+                }, 1000)
+              )) && setNewMessage("")
+            }
+          >
+            Send Message
+          </Button>
+        ) : (
+          <Button
+            component="a"
+            radius="lg"
+            onClick={async () =>
+              (await sendMessage(context, orbis, newMessage, orbisTag).then(
+                () =>
+                  setTimeout(() => {
+                    refetch();
+                  }, 1000)
+              )) && setNewMessage("")
+            }
+          >
+            Send Message
+          </Button>
+        )
       ) : (
         <Text sx={{ marginLeft: "20px" }}>
           Connect Wallet to send messages and reactions

@@ -76,7 +76,7 @@ declare interface IOrbis {
     conversation_id: string;
     encryptedMessage: IOrbisEncryptedBody;
   }) => Promise<any>;
-  decryptPost: (content: IOrbisPostContent) => Promise<any>;
+  decryptPost: (content: IOrbisEncryptedBody) => Promise<any>;
   deletePost: (stream_id: string) => Promise<{
     status: number;
     result: string;
@@ -189,10 +189,13 @@ declare interface IOrbis {
       master?: string;
       only_master?: boolean;
       tag?: string;
-      algorithm?: keyof typeof IOrbisGetPostsAlgorithm | null;
+      term?: string;
+      include_child_contexts?: boolean;
+      algorithm?: keyof typeof IOrbisGetPostsAlgorithm;
     },
     page?: number,
-    limit?: number
+    limit?: number,
+    ascending?: boolean
   ) => Promise<{
     data: IOrbisPost[];
     error: any;
@@ -358,9 +361,6 @@ interface IOrbisResponse {
 declare enum IOrbisGetPostsAlgorithm {
   "recommendations",
   "all-posts",
-  "all-master-posts",
-  "all-did-master-posts",
-  "all-context-master-posts",
   "all-posts-non-filtered",
 }
 
@@ -494,9 +494,9 @@ interface IOrbisEncryptionRules {
 }
 
 interface IOrbisEncryptedBody {
-  accessControlConditions: string;
   encryptedString: string;
   encryptedSymmetricKey: string;
+  accessControlConditions: string;
 }
 
 interface IOrbisPostMention {
