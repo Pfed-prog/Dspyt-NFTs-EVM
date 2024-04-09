@@ -22,6 +22,7 @@ import {
   sendMessage,
   sendReaction,
   sendEncryptedMessage,
+  decryptPost,
 } from "@/services/orbis";
 import { useMessages } from "@/hooks/api";
 
@@ -107,9 +108,17 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
                   ) + "..."}
               </a>
               :
-              {message.content.encryptedBody
-                ? "Lit Encrypted"
-                : message.content.body}
+              {message.content.encryptedBody ? (
+                <Button
+                  onClick={async () =>
+                    await decryptPost(message.content.encryptedBody, orbis)
+                  }
+                >
+                  decrypt
+                </Button>
+              ) : (
+                message.content.body
+              )}
             </Text>
           </Group>
           <Group>

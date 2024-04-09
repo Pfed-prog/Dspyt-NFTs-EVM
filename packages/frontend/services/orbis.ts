@@ -30,19 +30,14 @@ export const sendEncryptedMessage = async function (
       tags: [{ slug: tag, title: tag }],
     },
     {
-      type: "custom",
-      accessControlConditions: [
-        {
-          contractAddress: address,
-          standardContractType: "ERC721",
-          chain: "optimism",
-          method: "balanceOf",
-          parameters: [":userAddress"],
-          returnValueTest: { comparator: ">=", value: "1" },
-        },
-      ],
+      type: "token-gated",
+      chain: "optimism",
+      contractType: "ERC721",
+      contractAddress: address,
+      minTokenBalance: "1",
     }
   );
+  console.log(response);
   return response;
 };
 
@@ -93,5 +88,6 @@ export async function loadData(
 
 export async function decryptPost(content: any, orbis: IOrbis) {
   const res = await orbis.decryptPost(content);
+  console.log(res);
   return res;
 }

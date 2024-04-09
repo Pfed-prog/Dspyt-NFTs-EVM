@@ -481,16 +481,10 @@ interface IOrbisCredential {
 interface IOrbisEncryptionPostRules {
   type: "token-gated" | "custom";
   accessControlConditions?: object;
-}
-
-interface IOrbisEncryptionRules {
-  type: "token-gated" | "custom";
-  chain: string;
-  contractType: "ERC20" | "ERC721" | "ERC1155";
-  contractAddress: string;
-  minTokenBalance: string;
-  tokenId: string;
-  accessControlConditions?: object;
+  chain?: string;
+  contractType?: string;
+  contractAddress?: string;
+  minTokenBalance?: string;
 }
 
 interface IOrbisEncryptedBody {
