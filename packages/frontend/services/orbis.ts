@@ -1,47 +1,44 @@
 import { NextRouter } from "next/router";
 
-import { ChainName } from "@/constants/chains";
+import { getContractInfo } from "@/utils/contracts";
 
 export const sendMessage = async function (
   context: string,
-  isEncrypted: boolean,
   orbis: IOrbis,
   newMessage: string,
-  tag: string,
-  address: `0x${string}`,
-  currentChain: ChainName
+  tag: string
 ) {
-  let response: IOrbisResponse;
-  if (isEncrypted) {
-    response = await orbis.createPost(
-      {
-        body: newMessage,
-        context: context,
-        tags: [{ slug: tag, title: tag }],
-      },
-      {
-        type: "custom",
-        accessControlConditions: [
-          {
-            contractAddress: address,
-            standardContractType: "ERC721",
-            chain: currentChain,
-            method: "balanceOf",
-            parameters: [":userAddress"],
-            returnValueTest: { comparator: ">=", value: "1" },
-          },
-        ],
-      }
-    );
-  }
-  if (!isEncrypted) {
-    response = await orbis.createPost({
+  const response: IOrbisResponse = await orbis.createPost({
+    body: newMessage,
+    context: context,
+    tags: [{ slug: tag, title: tag }],
+  });
+  return response;
+};
+
+export const sendEncryptedMessage = async function (
+  context: string,
+  orbis: IOrbis,
+  newMessage: string,
+  tag: string
+) {
+  const { address } = getContractInfo();
+  const response: IOrbisResponse = await orbis.createPost(
+    {
       body: newMessage,
       context: context,
       tags: [{ slug: tag, title: tag }],
-    });
-  }
-  return true;
+    },
+    {
+      type: "token-gated",
+      chain: "optimism",
+      contractType: "ERC721",
+      contractAddress: address,
+      minTokenBalance: "1",
+    }
+  );
+  console.log(response);
+  return response;
 };
 
 export const sendReaction = async function (
@@ -50,6 +47,7 @@ export const sendReaction = async function (
   orbis: IOrbis
 ) {
   const response: IOrbisResponse = await orbis.react(id, reaction);
+  return response;
 };
 
 export const getMessage = async function (content: any, orbis: IOrbis) {
@@ -64,12 +62,11 @@ export async function loadData(
   orbis: IOrbis,
   router: NextRouter,
   context: string,
-  tag: string,
-  setMessages: React.Dispatch<any>
+  tag: string
 ) {
   if (!router.isReady) return;
 
-  let result = await orbis.getPosts(
+  const result = await orbis.getPosts(
     {
       context: context,
       tag: tag,
@@ -86,6 +83,11 @@ export async function loadData(
       };
     })
   );
+  return messagesData;
+}
 
-  setMessages(messagesData);
+export async function decryptPost(content: any, orbis: IOrbis) {
+  const res = await orbis.decryptPost(content);
+  console.log(res);
+  return res;
 }

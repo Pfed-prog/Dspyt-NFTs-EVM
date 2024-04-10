@@ -1,10 +1,10 @@
-import { fetchMessages } from "./queries";
-
 import { useQuery } from "@tanstack/react-query";
 
-export const useMessages = (address: string) => {
+import { fetchMessages } from "./queries";
+
+export const useMessages = (orbisTag: string) => {
   return useQuery({
-    queryKey: [address],
-    queryFn: () => fetchMessages(address),
+    queryKey: [orbisTag],
+    queryFn: () => fetchMessages(orbisTag),
   });
 };

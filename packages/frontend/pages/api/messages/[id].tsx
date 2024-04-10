@@ -3,29 +3,30 @@ import { Orbis } from "@orbisclub/orbis-sdk";
 
 const orbis: IOrbis = new Orbis();
 
+type dataOut = {
+  data: IOrbisPost[];
+};
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<dataOut>
 ) {
-  try {
-    const { id } = req.query;
-    const context =
-      "kjzl6cwe1jw147hcck185xfdlrxq9zv0y0hoa6shzskqfnio56lhf8190yaei7w";
-    const tag = "optimism";
+  const { id } = req.query;
+  const postId: string = String(id);
 
-    let result = await orbis.getPosts(
-      {
-        context: context,
-        tag: tag,
-      },
-      0,
-      5
-    );
+  const context =
+    "kjzl6cwe1jw147hcck185xfdlrxq9zv0y0hoa6shzskqfnio56lhf8190yaei7w";
 
-    res.status(200).json({
-      data: result.data,
-    });
-  } catch (err) {
-    res.status(500).send({ error: "failed to fetch data" + err });
-  }
+  const result = await orbis.getPosts(
+    {
+      context: context,
+      tag: postId,
+    },
+    0,
+    5
+  );
+
+  res.status(200).json({
+    data: result.data,
+  });
 }
