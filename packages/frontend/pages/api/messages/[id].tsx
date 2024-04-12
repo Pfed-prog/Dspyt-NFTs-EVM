@@ -23,7 +23,7 @@ export default async function handler(
       tag: postId,
     },
     0,
-    5
+    10
   );
 
   res.status(200).json({
