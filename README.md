@@ -31,7 +31,7 @@ Pin Save is a decentralized image, video sharing and content aggregation platfor
 
 ![decentralized feed](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/feed.png)
 
-- Decentralized Lit Access Control encrypted comments section on orbis, ceramic and ipfs connected to a decentralized post and identity:
+- Decentralized comments section on orbis, ceramic and ipfs connected to a decentralized post and identity:
 
 ![decentralized comments](https://bafybeicvm4vqutptj2nxr4iej75tdgnjkc7fv7zez52uyq2laoswnsz6de.ipfs.w3s.link/Screenshot%20from%202023-01-09%2023-18-48.png)
 
@@ -47,6 +47,16 @@ Pin Save is a decentralized image, video sharing and content aggregation platfor
 
 ![Video Player](https://bafybeiacg6yoxvxvk2ayugwlcfnnjpm5kcchvy3t2fl7mu64ft4zt4fs6m.ipfs.nftstorage.link/)
 
+### Optimism Smart contracts
+
+[Optimism Smart contracts](https://optimistic.etherscan.io/address/0x40F320CD3Cd616E59599568c4eA011E2eE49a175#code)
+
+### Ceramic Orbis Context
+
+[More information about Orbis Contexts](https://docs.useorbis.com/docs/primitives/contexts)
+
+[Ceramic Scan Indexer Stream Data](https://cerscan.com/mainnet/stream/kjzl6cwe1jw147hcck185xfdlrxq9zv0y0hoa6shzskqfnio56lhf8190yaei7w)
+
 ## Setup
 
 To run this project and start the project in development mode, install it locally using `yarn` and run `yarn dev`:
@@ -56,14 +66,11 @@ yarn
 yarn dev
 ```
 
-## Latest Update
+## Latest Updates
 
-- Abstracted orbis and ipfs fetching in the application code.
-- We added more ipfs public servers to improve the loading of CIDs.
-- Removed faulty ipfs servers.
-- Added Optimism mainnet blockchain.
-- Upgraded solidity contract to set the minting fee.
-- Migrated to [https://evm.pinsave.app](https://evm.pinsave.app).
+- Removed faulty Lit Orbis encryption.
+- Improved API for Orbis Posts.
+- Added Context for Orbis Client.
 
 ## Further Resources
 

@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useAccount } from "wagmi";
+import Image from "next/image";
 import {
   Paper,
   Button,
@@ -6,20 +8,17 @@ import {
   Text,
   Group,
   Avatar,
-  Switch,
   Title,
 } from "@mantine/core";
 import { BiDislike } from "react-icons/bi";
 import { FaLaughSquint } from "react-icons/fa";
 import { Heart } from "tabler-icons-react";
-import { Orbis } from "@orbisclub/orbis-sdk";
-import { useAccount } from "wagmi";
-import Image from "next/image";
 
 import type { IndividualPost } from "@/services/upload";
 import { timeConverter } from "@/utils/time";
 import { sendMessage, sendReaction } from "@/services/orbis";
 import { useMessages } from "@/hooks/api";
+import { useOrbisContext } from "context";
 
 const context =
   "kjzl6cwe1jw147hcck185xfdlrxq9zv0y0hoa6shzskqfnio56lhf8190yaei7w";
@@ -29,21 +28,11 @@ interface IMyProps {
   orbisTag: string;
 }
 
-const orbis: IOrbis = new Orbis();
-
 const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
   const [newMessage, setNewMessage] = useState<string>("");
-
+  const { orbis } = useOrbisContext();
   const { isConnected } = useAccount();
   const { data: messagesQueried, refetch } = useMessages(orbisTag);
-
-  useEffect(() => {
-    async function connectOrbis() {
-      await orbis.connect_v2({ chain: "ethereum", lit: true });
-    }
-    connectOrbis();
-  }, []);
-
   return (
     <Paper shadow="sm" p="md" withBorder>
       <Title mb="1.4rem">{post.name}</Title>

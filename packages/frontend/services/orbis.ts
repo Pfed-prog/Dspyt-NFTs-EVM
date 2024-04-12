@@ -8,6 +8,7 @@ export const sendMessage = async function (
   newMessage: string,
   tag: string
 ) {
+  await orbis.isConnected();
   const response: IOrbisResponse = await orbis.createPost({
     body: newMessage,
     context: context,
@@ -21,6 +22,7 @@ export const sendReaction = async function (
   reaction: string,
   orbis: IOrbis
 ) {
+  await orbis.isConnected();
   const response: IOrbisResponse = await orbis.react(id, reaction);
   return response;
 };

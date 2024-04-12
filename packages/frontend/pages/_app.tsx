@@ -20,6 +20,7 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 
 import LayoutApp from "@/components/Layout";
+import { OrbisProvider } from "context";
 
 type NextAppProps<P = any> = AppProps & {
   pageProps: P;
@@ -81,9 +82,11 @@ function MyApp({ Component, pageProps }: NextAppProps) {
           <NotificationsProvider>
             <RainbowKitProvider chains={chains}>
               <LivepeerConfig client={livepeerClient}>
-                <LayoutApp>
-                  <Component {...pageProps} />
-                </LayoutApp>
+                <OrbisProvider>
+                  <LayoutApp>
+                    <Component {...pageProps} />
+                  </LayoutApp>
+                </OrbisProvider>
               </LivepeerConfig>
             </RainbowKitProvider>
           </NotificationsProvider>
