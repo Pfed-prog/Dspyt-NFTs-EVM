@@ -8,6 +8,7 @@ export const sendMessage = async function (
   newMessage: string,
   tag: string
 ) {
+  await orbis.isConnected();
   const response: IOrbisResponse = await orbis.createPost({
     body: newMessage,
     context: context,
@@ -16,36 +17,12 @@ export const sendMessage = async function (
   return response;
 };
 
-export const sendEncryptedMessage = async function (
-  context: string,
-  orbis: IOrbis,
-  newMessage: string,
-  tag: string
-) {
-  const { address } = getContractInfo();
-  const response: IOrbisResponse = await orbis.createPost(
-    {
-      body: newMessage,
-      context: context,
-      tags: [{ slug: tag, title: tag }],
-    },
-    {
-      type: "token-gated",
-      chain: "optimism",
-      contractType: "ERC721",
-      contractAddress: address,
-      minTokenBalance: "1",
-    }
-  );
-  console.log(response);
-  return response;
-};
-
 export const sendReaction = async function (
   id: string,
   reaction: string,
   orbis: IOrbis
 ) {
+  await orbis.isConnected();
   const response: IOrbisResponse = await orbis.react(id, reaction);
   return response;
 };
@@ -91,3 +68,32 @@ export async function decryptPost(content: any, orbis: IOrbis) {
   console.log(res);
   return res;
 }
+
+export const sendEncryptedMessage = async function (
+  context: string,
+  orbis: IOrbis,
+  newMessage: string,
+  tag: string
+) {
+  const { address } = getContractInfo();
+  const response: IOrbisResponse = await orbis.createPost(
+    {
+      body: newMessage,
+      context: context,
+      tags: [{ slug: tag, title: tag }],
+    },
+    {
+      type: "custom",
+      accessControlConditions: [
+        {
+          contractAddress: address,
+          chain: "optimism",
+          method: "balanceOf",
+          parameters: [":userAddress"],
+          returnValueTest: { comparator: ">=", value: "1" },
+        },
+      ],
+    }
+  );
+  return response;
+};

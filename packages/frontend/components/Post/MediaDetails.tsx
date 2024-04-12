@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useAccount } from "wagmi";
+import Image from "next/image";
 import {
   Paper,
   Button,
@@ -6,25 +8,17 @@ import {
   Text,
   Group,
   Avatar,
-  Switch,
   Title,
 } from "@mantine/core";
 import { BiDislike } from "react-icons/bi";
 import { FaLaughSquint } from "react-icons/fa";
 import { Heart } from "tabler-icons-react";
-import { Orbis } from "@orbisclub/orbis-sdk";
-import { useAccount } from "wagmi";
-import Image from "next/image";
 
 import type { IndividualPost } from "@/services/upload";
 import { timeConverter } from "@/utils/time";
-import {
-  sendMessage,
-  sendReaction,
-  sendEncryptedMessage,
-  decryptPost,
-} from "@/services/orbis";
+import { sendMessage, sendReaction } from "@/services/orbis";
 import { useMessages } from "@/hooks/api";
+import { useOrbisContext } from "context";
 
 const context =
   "kjzl6cwe1jw147hcck185xfdlrxq9zv0y0hoa6shzskqfnio56lhf8190yaei7w";
@@ -34,22 +28,11 @@ interface IMyProps {
   orbisTag: string;
 }
 
-const orbis: IOrbis = new Orbis();
-
 const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
-  const [isEncrypted, setIsEncrypted] = useState(false);
   const [newMessage, setNewMessage] = useState<string>("");
-
+  const { orbis } = useOrbisContext();
   const { isConnected } = useAccount();
   const { data: messagesQueried, refetch } = useMessages(orbisTag);
-
-  useEffect(() => {
-    async function connectOrbis() {
-      await orbis.connect_v2({ chain: "ethereum", lit: true });
-    }
-    connectOrbis();
-  }, []);
-
   return (
     <Paper shadow="sm" p="md" withBorder>
       <Title mb="1.4rem">{post.name}</Title>
@@ -108,17 +91,9 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
                   ) + "..."}
               </a>
               :
-              {message.content.encryptedBody ? (
-                <Button
-                  onClick={async () =>
-                    await decryptPost(message.content.encryptedBody, orbis)
-                  }
-                >
-                  decrypt
-                </Button>
-              ) : (
-                message.content.body
-              )}
+              {message.content.encryptedBody
+                ? " encrypted message"
+                : " " + message.content.body}
             </Text>
           </Group>
           <Group>
@@ -186,45 +161,21 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
           placeholder="Enter your message"
           sx={{ maxWidth: "240px" }}
         />
-        <Text>Only for PinSave holders:</Text>
-        <Switch onClick={() => setIsEncrypted((prevCheck) => !prevCheck)} />
       </Group>
       {isConnected ? (
-        isEncrypted ? (
-          <Button
-            component="a"
-            radius="lg"
-            onClick={async () =>
-              (await sendEncryptedMessage(
-                context,
-                orbis,
-                newMessage,
-                orbisTag
-              ).then(() =>
-                setTimeout(() => {
-                  refetch();
-                }, 1000)
-              )) && setNewMessage("")
-            }
-          >
-            Send Message
-          </Button>
-        ) : (
-          <Button
-            component="a"
-            radius="lg"
-            onClick={async () =>
-              (await sendMessage(context, orbis, newMessage, orbisTag).then(
-                () =>
-                  setTimeout(() => {
-                    refetch();
-                  }, 1000)
-              )) && setNewMessage("")
-            }
-          >
-            Send Message
-          </Button>
-        )
+        <Button
+          component="a"
+          radius="lg"
+          onClick={async () =>
+            (await sendMessage(context, orbis, newMessage, orbisTag).then(() =>
+              setTimeout(() => {
+                refetch();
+              }, 1000)
+            )) && setNewMessage("")
+          }
+        >
+          Send Message
+        </Button>
       ) : (
         <Text sx={{ marginLeft: "20px" }}>
           Connect Wallet to send messages and reactions
