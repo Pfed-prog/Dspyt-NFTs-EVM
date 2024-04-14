@@ -1,10 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-import { fetchMessages } from "./queries";
+import { fetchOrbisMessages } from "./queries";
 
-export const useMessages = (orbisTag: string) => {
-  return useQuery({
+export const useMessagesInfiteQuery = (orbisTag: string) => {
+  return useInfiniteQuery({
     queryKey: [orbisTag],
-    queryFn: () => fetchMessages(orbisTag),
+    queryFn: async ({ pageParam }: { pageParam?: number | undefined }) => {
+      const data = await fetchOrbisMessages(orbisTag, { pageParam });
+      return data;
+    },
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage: any, pages: any) => {
+      console.log(lastPage.hasMoreMessages);
+      if (Boolean(lastPage.hasMoreMessages)) {
+        return pages.length;
+      }
+    },
+  });
+};
+
+export const useMessages = (orbisTag: string, page?: number) => {
+  return useQuery({
+    queryKey: [orbisTag, page],
+    queryFn: () => fetchOrbisMessages(orbisTag, { pageParam: page }),
   });
 };

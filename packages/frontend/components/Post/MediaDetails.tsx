@@ -9,6 +9,8 @@ import {
   Group,
   Avatar,
   Title,
+  Center,
+  Stack,
 } from "@mantine/core";
 import { BiDislike } from "react-icons/bi";
 import { FaLaughSquint } from "react-icons/fa";
@@ -29,10 +31,16 @@ interface IMyProps {
 }
 
 const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
-  const [newMessage, setNewMessage] = useState<string>("");
   const { orbis } = useOrbisContext();
   const { isConnected } = useAccount();
-  const { data: messagesQueried, refetch } = useMessages(orbisTag);
+  const [newMessage, setNewMessage] = useState<string>("");
+  const [page, setPage] = useState<number>(0);
+
+  const {
+    data: messagesQueried,
+    isLoading,
+    refetch,
+  } = useMessages(orbisTag, page);
   return (
     <Paper shadow="sm" p="md" withBorder>
       <Title mb="1.4rem">{post.name}</Title>
@@ -55,6 +63,19 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
             post.owner.substring(35)}
         </a>
       </p>
+
+      {!messagesQueried && isLoading && (
+        <Center>
+          <Stack
+            sx={{
+              maxWidth: 700,
+            }}
+          >
+            <Text>Loading...</Text>
+          </Stack>
+        </Center>
+      )}
+
       {messagesQueried?.data.map((message: any, i: number) => (
         <Paper
           key={i}
@@ -153,6 +174,33 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
           </Group>
         </Paper>
       ))}
+      <Text>Current Page: {page}</Text>
+      <Center my={14}>
+        <Button
+          onClick={() => {
+            setPage((page) => page - 1);
+            setTimeout(() => {
+              refetch();
+            }, 1000);
+          }}
+          mx="auto"
+          disabled={page === 0}
+        >
+          prev
+        </Button>
+        <Button
+          onClick={() => {
+            setPage((page) => page + 1);
+            setTimeout(() => {
+              refetch();
+            }, 1000);
+          }}
+          mx="auto"
+          disabled={messagesQueried?.hasMoreMessages === false}
+        >
+          next
+        </Button>
+      </Center>
       <Group>
         <TextInput
           my="lg"
