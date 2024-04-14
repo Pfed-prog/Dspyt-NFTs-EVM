@@ -1,10 +1,13 @@
 import fetcher from "@/utils/fetcher";
 
-export const fetchMessages = async (address: string) => {
+export const fetchOrbisMessages = async (
+  orbisTag: string,
+  { pageParam = 0 }: { pageParam?: number } = {}
+) => {
   try {
-    return await fetcher(`/api/messages/${address}`);
+    return await fetcher(`/api/messages/${orbisTag}/${pageParam}`);
   } catch (error) {
-    console.error("Error fetching post:", error);
+    console.error("Error fetching messages", error);
     throw error;
   }
 };
