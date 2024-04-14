@@ -36,7 +36,6 @@ export default async function handler(
       5,
       false
     );
-    console.log(result);
     const lenResult: number = result.data.length;
     const hasMoreMessages: boolean = lenResult === 5;
     console.log(lenResult);
