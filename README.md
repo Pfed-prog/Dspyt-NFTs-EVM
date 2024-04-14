@@ -68,9 +68,9 @@ yarn dev
 
 ## Latest Updates
 
-- Removed faulty Lit Orbis encryption.
-- Improved API for Orbis Posts.
+- Improved API and React-Query for Pin Save Comments.
 - Added Context for Orbis Client.
+- Removed faulty Lit Orbis encryption.
 
 ## Further Resources
 

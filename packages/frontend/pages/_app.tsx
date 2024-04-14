@@ -3,6 +3,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import type { NextComponentType } from "next";
 import type AppProps from "next/app";
+import { Analytics } from "@vercel/analytics/react";
 import {
   LivepeerConfig,
   createReactClient,
@@ -92,6 +93,7 @@ function MyApp({ Component, pageProps }: NextAppProps) {
           </NotificationsProvider>
         </WagmiConfig>
       </QueryClientProvider>
+      <Analytics />
     </MantineProvider>
   );
 }
