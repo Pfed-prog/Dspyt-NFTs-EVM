@@ -14,7 +14,6 @@ const fetcher = async (input: RequestInfo, params = {}) => {
     throw new Error(response.statusText);
   }
   const data = await response.json();
-
   return data;
 };
 
