@@ -17,7 +17,7 @@ export default async function handler(
   res: NextApiResponse<dataOutCorrect | dataOutError>
 ) {
   const { slug } = req.query;
-
+  console.log(slug);
   if (slug?.length === 2) {
     const postId: string = slug[0];
     const page: number = Number(slug[1]);
@@ -36,9 +36,10 @@ export default async function handler(
       5,
       false
     );
-
+    console.log(result);
     const lenResult: number = result.data.length;
     const hasMoreMessages: boolean = lenResult === 5;
+    console.log(lenResult);
 
     res.status(200).json({
       data: result.data,

@@ -41,6 +41,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
     isLoading,
     refetch,
   } = useMessages(orbisTag, page);
+
   return (
     <Paper shadow="sm" p="md" withBorder>
       <Title mb="1.4rem">{post.name}</Title>
