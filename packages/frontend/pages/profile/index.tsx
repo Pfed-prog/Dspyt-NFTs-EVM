@@ -26,12 +26,12 @@ const Upload = () => {
   const router = useRouter();
   const [cover, setCover] = useState<File | undefined>();
   const [image, setImage] = useState<File | undefined>();
-  const [description, setDescription] = useState<string>();
+  const [username, setUsername] = useState<string | undefined>();
+  const [description, setDescription] = useState<string | undefined>();
 
   const { isConnected, connector } = useAccount();
   const { orbis } = useOrbisContext();
   const [user, setUser] = useState<IOrbisProfile>();
-  const [username, setUsername] = useState<string>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,9 +89,12 @@ const Upload = () => {
 
     await orbis.updateProfile({
       username: username ?? user?.details?.profile?.username ?? "",
-      pfp: user?.details?.profile?.pfp ?? "",
-      cover: user?.details?.profile?.cover ?? "",
       description: description ?? user?.details?.profile?.description ?? "",
+      pfp:
+        user?.details?.profile?.pfp ?? "https://evm.pinsave.app/Rectangle.png",
+      cover:
+        user?.details?.profile?.cover ??
+        "https://evm.pinsave.app/background.png",
     });
 
     updateNotification({
@@ -100,6 +103,9 @@ const Upload = () => {
       title: "Profile uploaded successfully!!",
       message: "",
     });
+    setTimeout(() => {
+      router.push("/profile");
+    }, 3000);
   }
 
   async function logout() {
@@ -152,10 +158,10 @@ const Upload = () => {
                   }}
                 >
                   <Title mx="auto" order={2} align="center">
-                    {user?.details?.profile?.username}
+                    {user?.details?.profile?.username ?? ""}
                   </Title>
                   <Text mt={15} mx="auto" align="center">
-                    {user?.details?.profile?.description}
+                    {user?.details?.profile?.description ?? ""}
                   </Text>
                   <Group mt={10} position="center">
                     <Group position="center" mt="md" mb="xs">
@@ -262,7 +268,7 @@ const Upload = () => {
               onDrop={(files) => setImage(files[0])}
               maxSize={25000000}
               multiple={false}
-              sx={{ maxWidth: 500, maxHeight: 250, marginBottom: "1rem" }}
+              sx={{ maxWidth: 500, maxHeight: 500, marginBottom: "1rem" }}
               accept={[
                 MIME_TYPES.png,
                 MIME_TYPES.jpeg,
@@ -297,7 +303,7 @@ const Upload = () => {
               onDrop={(files) => setCover(files[0])}
               maxSize={25000000}
               multiple={false}
-              sx={{ maxWidth: 500, maxHeight: 250, marginBottom: "3rem" }}
+              sx={{ maxWidth: 500, maxHeight: 500, marginBottom: "3rem" }}
               accept={[
                 MIME_TYPES.png,
                 MIME_TYPES.jpeg,

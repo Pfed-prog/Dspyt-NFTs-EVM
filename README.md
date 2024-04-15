@@ -21,7 +21,7 @@
 Pin Save is a decentralized image, video sharing and content aggregation platform where users can not only control the content but also the platform itself.
 
 1. The decentralized feed reinforces the discovery of content and feedback.
-2. Decentralized Identity (ERC-725), which provides anonymity and data protection.
+2. Decentralized Identity provides anonymity and data protection.
 3. Upgradeable, resilient, and open decentralized storage.
 4. Smart contracts to securely serve web experiences directly to users.
 
@@ -42,6 +42,10 @@ Pin Save is a decentralized image, video sharing and content aggregation platfor
 - Decentralized Profile ENS resolution:
 
 ![Pin Save ENS resolution Profile](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/ensProfile.png)
+
+- Pin Save update your profile page:
+
+![Pin Save update your profile page](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/updateProfile.png)
 
 - Video and Image posting:
 
@@ -74,7 +78,8 @@ yarn dev
 
 - Integrated ENS Name and Avatar resolver on Profile Display. [luc.eth profile](https://evm.pinsave.app/profile/0x225f137127d9067788314bc7fcc1f36746a3c3B5).
 - Built API route and React-Query for Pin Save Comments.
-- Added React Context for Orbis Client.
+- Built React Context for Orbis Client.
+- Enhanced page to update your Profile.
 - Refactoring Orbis types.
 - Reported Bug in [Vercel dynamic catch-all routes](https://github.com/vercel/next.js/issues/64507).
 - Removed faulty Lit Orbis encryption.
