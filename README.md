@@ -68,10 +68,13 @@ yarn dev
 
 ## Latest Updates
 
-- Build API route and React-Query for Pin Save Comments.
+- Integrated ENS Name and Avatar resolver on Profile Display. [luc.eth profile](https://evm.pinsave.app/profile/0x225f137127d9067788314bc7fcc1f36746a3c3B5).
+- Built API route and React-Query for Pin Save Comments.
 - Added React Context for Orbis Client.
+- Refactoring Orbis types.
 - Reported Bug in [Vercel dynamic catch-all routes](https://github.com/vercel/next.js/issues/64507).
 - Removed faulty Lit Orbis encryption.
+- Connected Vercel Analytics.
 
 ## Further Resources
 
