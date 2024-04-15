@@ -3,8 +3,8 @@ import { Center } from "@mantine/core";
 import Image from "next/image";
 
 import type { IndividualPost } from "@/services/upload";
-import { IsNotMp4 } from "@/utils/media";
 import VideoPlayer from "@/components/Post/VideoPlayer";
+import { IsNotMp4 } from "@/utils/media";
 
 interface IMyProps {
   post: IndividualPost;
