@@ -4,7 +4,7 @@ export const fetchProfile = async (address: string) => {
   try {
     return await fetcher(`/api/profile/${address}`);
   } catch (error) {
-    console.error("Error fetching post:", error);
+    console.error("Error fetching profile:", error);
     throw error;
   }
 };

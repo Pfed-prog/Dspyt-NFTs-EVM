@@ -1,3 +1,7 @@
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 import {
   createStyles,
   Text,
@@ -11,10 +15,6 @@ import {
 import { useBooleanToggle } from "@mantine/hooks";
 import { useMediaQuery } from "@mantine/hooks";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
 
 const useStyles = createStyles((theme) => ({
   root: {
