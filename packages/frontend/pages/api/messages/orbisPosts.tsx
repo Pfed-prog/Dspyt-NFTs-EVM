@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Orbis } from "@orbisclub/orbis-sdk";
 
+import { contextOrbis } from "@/utils/contextConstant";
+
 const orbis: IOrbis = new Orbis();
 
 type dataOutCorrect = {
@@ -21,14 +23,9 @@ export default async function handler(
     const postId: string = String(data.postId);
     const page: number = Number(data.page);
 
-    console.log("api page", page);
-
-    const context =
-      "kjzl6cwe1jw147hcck185xfdlrxq9zv0y0hoa6shzskqfnio56lhf8190yaei7w";
-
     const result = await orbis.getPosts(
       {
-        context: context,
+        context: contextOrbis,
         tag: postId,
       },
       page,
@@ -37,7 +34,6 @@ export default async function handler(
     );
     const lenResult: number = result.data.length;
     const hasMoreMessages: boolean = lenResult === 5;
-    console.log(lenResult);
 
     res.status(200).json({
       data: result.data,

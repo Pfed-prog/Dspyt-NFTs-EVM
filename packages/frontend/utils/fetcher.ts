@@ -1,6 +1,5 @@
 const fetcher = async (input: RequestInfo, params = {}) => {
-  const response = await fetch(
-    input /*  {
+  const response = await fetch(input, {
     mode: "cors",
     credentials: "same-origin",
     headers: {
@@ -9,8 +8,7 @@ const fetcher = async (input: RequestInfo, params = {}) => {
     redirect: "follow",
     referrerPolicy: "no-referrer",
     ...params,
-  } */
-  );
+  });
   if (!response.ok) {
     throw new Error(response.statusText);
   }

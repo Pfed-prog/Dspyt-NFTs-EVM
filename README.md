@@ -68,8 +68,9 @@ yarn dev
 
 ## Latest Updates
 
-- Improved API and React-Query for Pin Save Comments.
-- Added Context for Orbis Client.
+- Build API route and React-Query for Pin Save Comments.
+- Added React Context for Orbis Client.
+- Reported Bug in [Vercel dynamic catch-all routes](https://github.com/vercel/next.js/issues/64507).
 - Removed faulty Lit Orbis encryption.
 
 ## Further Resources

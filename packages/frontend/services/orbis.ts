@@ -1,9 +1,9 @@
 import { NextRouter } from "next/router";
 
 import { getContractInfo } from "@/utils/contracts";
+import { contextOrbis } from "@/utils/contextConstant";
 
 export const sendMessage = async function (
-  context: string,
   orbis: IOrbis,
   newMessage: string,
   tag: string
@@ -11,7 +11,7 @@ export const sendMessage = async function (
   await orbis.isConnected();
   const response: IOrbisResponse = await orbis.createPost({
     body: newMessage,
-    context: context,
+    context: contextOrbis,
     tags: [{ slug: tag, title: tag }],
   });
   return response;
