@@ -183,7 +183,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
           ))}
 
           <Text my={10}>Current Page: {page + 1}</Text>
-          <Center my={14}>
+          <Center>
             <Button
               onClick={() => {
                 setPage((page) => page - 1);
@@ -211,7 +211,8 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
           </Center>
         </div>
       ) : null}
-      <Group>
+
+      <Center>
         <TextInput
           my="lg"
           onChange={(e) => setNewMessage(e.target.value)}
@@ -219,26 +220,27 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
           placeholder="Enter your message"
           sx={{ maxWidth: "240px" }}
         />
-      </Group>
-      {isConnected ? (
-        <Button
-          component="a"
-          radius="lg"
-          onClick={async () =>
-            (await sendMessage(orbis, newMessage, orbisTag).then(() =>
-              setTimeout(() => {
-                refetch();
-              }, 1000)
-            )) && setNewMessage("")
-          }
-        >
-          Send Message
-        </Button>
-      ) : (
-        <Text sx={{ marginLeft: "20px" }}>
-          Connect Wallet to send messages and reactions
-        </Text>
-      )}
+        {isConnected ? (
+          <Button
+            component="a"
+            ml="xs"
+            radius="lg"
+            onClick={async () =>
+              (await sendMessage(orbis, newMessage, orbisTag).then(() =>
+                setTimeout(() => {
+                  refetch();
+                }, 1000)
+              )) && setNewMessage("")
+            }
+          >
+            Send Message
+          </Button>
+        ) : (
+          <Text sx={{ marginLeft: "20px" }}>
+            Connect Wallet to send messages and reactions
+          </Text>
+        )}
+      </Center>
     </Paper>
   );
 };

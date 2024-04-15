@@ -26,12 +26,12 @@ const Upload = () => {
   const router = useRouter();
   const [cover, setCover] = useState<File | undefined>();
   const [image, setImage] = useState<File | undefined>();
-  const [description, setDescription] = useState<string>();
+  const [username, setUsername] = useState<string | undefined>();
+  const [description, setDescription] = useState<string | undefined>();
 
   const { isConnected, connector } = useAccount();
   const { orbis } = useOrbisContext();
   const [user, setUser] = useState<IOrbisProfile>();
-  const [username, setUsername] = useState<string>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,10 +71,10 @@ const Upload = () => {
       }
 
       await orbis.updateProfile({
-        username: username ?? user?.details.profile?.username ?? "",
-        pfp: cidPfp ?? user?.details.profile?.pfp ?? "",
-        cover: cidCover ?? user?.details.profile?.cover ?? "",
-        description: description ?? user?.details.profile?.description ?? "",
+        username: username ?? user?.details?.profile?.username ?? "",
+        pfp: cidPfp ?? user?.details?.profile?.pfp ?? "",
+        cover: cidCover ?? user?.details?.profile?.cover ?? "",
+        description: description ?? user?.details?.profile?.description ?? "",
       });
 
       updateNotification({
@@ -88,10 +88,13 @@ const Upload = () => {
     }
 
     await orbis.updateProfile({
-      username: username ?? user?.details.profile?.username ?? "",
-      pfp: user?.details.profile?.pfp ?? "",
-      cover: user?.details.profile?.cover ?? "",
-      description: description ?? user?.details.profile?.description ?? "",
+      username: username ?? user?.details?.profile?.username ?? "",
+      description: description ?? user?.details?.profile?.description ?? "",
+      pfp:
+        user?.details?.profile?.pfp ?? "https://evm.pinsave.app/Rectangle.png",
+      cover:
+        user?.details?.profile?.cover ??
+        "https://evm.pinsave.app/background.png",
     });
 
     updateNotification({
@@ -100,6 +103,9 @@ const Upload = () => {
       title: "Profile uploaded successfully!!",
       message: "",
     });
+    setTimeout(() => {
+      router.push("/profile");
+    }, 3000);
   }
 
   async function logout() {
@@ -109,228 +115,219 @@ const Upload = () => {
 
   return (
     <div>
-      {isConnected && user?.did ? (
-        <div>
-          <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
-            <BackgroundImage
-              src={
-                typeof user.details.profile?.cover === "string" &&
-                user.details.profile?.cover !== ""
-                  ? user.details.profile?.cover
-                  : "/background.png"
-              }
-              radius="xs"
-              style={{
-                height: "auto",
-                borderRadius: "10px",
-              }}
-            >
-              <Center>
-                <Stack
-                  spacing="xs"
-                  sx={{
-                    height: 400,
+      <div>
+        <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
+          <BackgroundImage
+            src={user?.details?.profile?.cover ?? "/background.png"}
+            radius="xs"
+            style={{
+              height: "auto",
+              borderRadius: "10px",
+            }}
+          >
+            <Center>
+              <Stack
+                spacing="xs"
+                sx={{
+                  height: 400,
+                }}
+              >
+                <Center>
+                  <Image
+                    height={200}
+                    width={200}
+                    src={user?.details?.profile?.pfp ?? "/Rectangle.png"}
+                    alt={
+                      user?.details?.profile?.username ?? "user profile picture"
+                    }
+                    style={{
+                      borderRadius: "10px",
+                      marginTop: "10px",
+                    }}
+                  />
+                </Center>
+                <Card
+                  shadow="sm"
+                  p="lg"
+                  radius="lg"
+                  withBorder
+                  mx="auto"
+                  style={{
+                    minWidth: 400,
+                    minHeight: 200,
                   }}
                 >
-                  <Center>
-                    <Image
-                      height={200}
-                      width={200}
-                      src={user.details.profile?.pfp ?? "/Rectangle.png"}
-                      alt={user.details.profile?.username ?? "user"}
-                      style={{
-                        borderRadius: "10px",
-                        marginTop: "10px",
-                      }}
-                    />
-                  </Center>
-                  <Card
-                    shadow="sm"
-                    p="lg"
-                    radius="lg"
-                    withBorder
-                    mx="auto"
-                    style={{
-                      minWidth: 400,
-                      minHeight: 200,
-                    }}
-                  >
-                    <Title mx="auto" order={2} align="center">
-                      {user.details.profile?.username}
-                    </Title>
-                    <Text mt={15} mx="auto" align="center">
-                      {user.details.profile?.description}
-                    </Text>
-                    <Group mt={10} position="center">
-                      <Group position="center" mt="md" mb="xs">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="icon icon-tabler icon-tabler-users"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          stroke-width="2"
-                          stroke="currentColor"
-                          fill="none"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                          <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0m-2 14v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2m1 -17.87a4 4 0 0 1 0 7.75m5 10.12v-2a4 4 0 0 0 -3 -3.85" />
-                        </svg>
-                        <Text> Followers: {user.details.count_followers} </Text>
-                        <Text> Following: {user.details.count_following} </Text>
-                        <Button
-                          my={2}
-                          size="sm"
-                          color="red"
-                          onClick={() => logout()}
-                          style={{
-                            zIndex: 1,
-                          }}
-                        >
-                          Log Out
-                        </Button>
-                      </Group>
+                  <Title mx="auto" order={2} align="center">
+                    {user?.details?.profile?.username ?? ""}
+                  </Title>
+                  <Text mt={15} mx="auto" align="center">
+                    {user?.details?.profile?.description ?? ""}
+                  </Text>
+                  <Group mt={10} position="center">
+                    <Group position="center" mt="md" mb="xs">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="icon icon-tabler icon-tabler-users"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0m-2 14v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2m1 -17.87a4 4 0 0 1 0 7.75m5 10.12v-2a4 4 0 0 0 -3 -3.85" />
+                      </svg>
+                      <Text>
+                        Followers: {user?.details?.count_followers ?? 0}
+                      </Text>
+                      <Text>
+                        Following: {user?.details?.count_following ?? 0}
+                      </Text>
+                      <Button
+                        my={2}
+                        size="sm"
+                        color="red"
+                        onClick={() => logout()}
+                        style={{
+                          zIndex: 1,
+                        }}
+                      >
+                        Log Out
+                      </Button>
                     </Group>
-                  </Card>
-                </Stack>
-              </Center>
-            </BackgroundImage>
-          </Box>
-          <Paper
-            shadow="xl"
-            p="md"
-            radius="lg"
-            sx={{ maxWidth: "700px", backgroundColor: "#82c7fc1d" }}
+                  </Group>
+                </Card>
+              </Stack>
+            </Center>
+          </BackgroundImage>
+        </Box>
+        <Paper
+          shadow="xl"
+          p="md"
+          radius="lg"
+          sx={{ maxWidth: "700px", backgroundColor: "#82c7fc1d" }}
+          mx="auto"
+        >
+          <TextInput
+            my={12}
+            size="md"
+            label="Change Username"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value as `0x${string}`)}
             mx="auto"
+            style={{
+              width: 300,
+              textAlign: "center",
+              WebkitBackgroundClip: "text",
+            }}
+            sx={{
+              background: "green",
+            }}
+          />
+          <TextInput
+            my={12}
+            size="md"
+            label="Change Description"
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            mx="auto"
+            style={{
+              width: 300,
+              textAlign: "center",
+              WebkitBackgroundClip: "text",
+            }}
+            sx={{
+              background: "green",
+            }}
+          />
+          <Title
+            mt={20}
+            order={2}
+            align="center"
+            style={{
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+            sx={(theme) => ({
+              background: theme.fn.radialGradient("green", "white"),
+            })}
           >
-            <TextInput
-              my={12}
-              size="md"
-              label="Change Username"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value as `0x${string}`)}
-              mx="auto"
-              style={{
-                width: 300,
-                textAlign: "center",
-                WebkitBackgroundClip: "text",
-              }}
-              sx={{
-                background: "green",
-              }}
-            />
-            <TextInput
-              my={12}
-              size="md"
-              label="Change Description"
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              mx="auto"
-              style={{
-                width: 300,
-                textAlign: "center",
-                WebkitBackgroundClip: "text",
-              }}
-              sx={{
-                background: "green",
-              }}
-            />
-            <Title
-              mt={20}
-              order={2}
-              align="center"
-              style={{
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-              sx={(theme) => ({
-                background: theme.fn.radialGradient("green", "white"),
-              })}
+            Upload PFP
+          </Title>
+          <Center>
+            <Dropzone
+              mt="md"
+              ml="xl"
+              mr="xl"
+              onReject={(files) => console.log("rejected files", files)}
+              onDrop={(files) => setImage(files[0])}
+              maxSize={25000000}
+              multiple={false}
+              sx={{ maxWidth: 500, maxHeight: 500, marginBottom: "1rem" }}
+              accept={[
+                MIME_TYPES.png,
+                MIME_TYPES.jpeg,
+                MIME_TYPES.webp,
+                MIME_TYPES.svg,
+                MIME_TYPES.gif,
+              ]}
             >
-              Upload PFP
-            </Title>
-            <Center>
-              <Dropzone
-                mt="md"
-                ml="xl"
-                mr="xl"
-                onReject={(files) => console.log("rejected files", files)}
-                onDrop={(files) => setImage(files[0])}
-                maxSize={25000000}
-                multiple={false}
-                sx={{ maxWidth: 500, maxHeight: 250, marginBottom: "1rem" }}
-                accept={[
-                  MIME_TYPES.png,
-                  MIME_TYPES.jpeg,
-                  MIME_TYPES.webp,
-                  MIME_TYPES.svg,
-                  MIME_TYPES.gif,
-                ]}
-              >
-                {() => dropzoneChildren(image)}
-              </Dropzone>
-            </Center>
-            <Title
-              mt={20}
-              order={2}
-              align="center"
-              style={{
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-              sx={(theme) => ({
-                background: theme.fn.radialGradient("green", "white"),
-              })}
+              {() => dropzoneChildren(image)}
+            </Dropzone>
+          </Center>
+          <Title
+            mt={20}
+            order={2}
+            align="center"
+            style={{
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+            sx={(theme) => ({
+              background: theme.fn.radialGradient("green", "white"),
+            })}
+          >
+            Upload Cover
+          </Title>
+          <Center>
+            <Dropzone
+              mt="md"
+              ml="xl"
+              mr="xl"
+              onReject={(files) => console.log("rejected files", files)}
+              onDrop={(files) => setCover(files[0])}
+              maxSize={25000000}
+              multiple={false}
+              sx={{ maxWidth: 500, maxHeight: 500, marginBottom: "3rem" }}
+              accept={[
+                MIME_TYPES.png,
+                MIME_TYPES.jpeg,
+                MIME_TYPES.webp,
+                MIME_TYPES.svg,
+                MIME_TYPES.gif,
+              ]}
             >
-              Upload Cover
-            </Title>
-            <Center>
-              <Dropzone
-                mt="md"
-                ml="xl"
-                mr="xl"
-                onReject={(files) => console.log("rejected files", files)}
-                onDrop={(files) => setCover(files[0])}
-                maxSize={25000000}
-                multiple={false}
-                sx={{ maxWidth: 500, maxHeight: 250, marginBottom: "3rem" }}
-                accept={[
-                  MIME_TYPES.png,
-                  MIME_TYPES.jpeg,
-                  MIME_TYPES.webp,
-                  MIME_TYPES.svg,
-                  MIME_TYPES.gif,
-                ]}
-              >
-                {() => dropzoneChildren(cover)}
-              </Dropzone>
-            </Center>
-            <Center>
-              <Button
-                my={12}
-                mt={20}
-                size="md"
-                onClick={() => updateProfile()}
-                mx="auto"
-              >
-                Submit
-              </Button>
-            </Center>
-          </Paper>
-        </div>
-      ) : null}
-      {!isConnected ? (
-        <Center>
-          <Stack>
-            <Title order={1}> PinSave profile Section</Title>
-            <Text> Connect to wallet to edit your profile</Text>
-          </Stack>
-        </Center>
-      ) : null}
+              {() => dropzoneChildren(cover)}
+            </Dropzone>
+          </Center>
+          <Center>
+            <Button
+              my={12}
+              mt={20}
+              size="md"
+              onClick={() => updateProfile()}
+              mx="auto"
+            >
+              Submit
+            </Button>
+          </Center>
+        </Paper>
+      </div>
     </div>
   );
 };

@@ -106,8 +106,8 @@ function Post() {
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0m-2 14v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2m1 -17.87a4 4 0 0 1 0 7.75m5 10.12v-2a4 4 0 0 0 -3 -3.85"></path>
                       </svg>
-                      <Text> Followers: {profileQueried?.followers} </Text>
-                      <Text> Following: {profileQueried?.following} </Text>
+                      <Text> Followers: {profileQueried?.followers ?? 0} </Text>
+                      <Text> Following: {profileQueried?.following ?? 0} </Text>
                     </Group>
                   </Group>
                 </Card>

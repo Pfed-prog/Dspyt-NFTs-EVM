@@ -21,27 +21,35 @@
 Pin Save is a decentralized image, video sharing and content aggregation platform where users can not only control the content but also the platform itself.
 
 1. The decentralized feed reinforces the discovery of content and feedback.
-2. Decentralized Identity (ERC-725), which provides anonymity and data protection.
+2. Decentralized Identity provides anonymity and data protection.
 3. Upgradeable, resilient, and open decentralized storage.
 4. Smart contracts to securely serve web experiences directly to users.
 
 ## Features
 
-- Decentralized feed of NFTs on Optimism and Ethereum Goerli chains with decentralized storage on IPFS with NFTPort, Estuary and Nft.storage:
+- Decentralized feed of NFTs on Optimism chain with decentralized storage on IPFS with NFTPort, Estuary and Nft.storage:
 
-![decentralized feed](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/feed.png)
+![decentralized feed](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/feed.png)
 
-- Decentralized comments section on orbis, ceramic and ipfs connected to a decentralized post and identity:
+- Decentralized comments section on orbis, ceramic and ipfs connected to a decentralized Pin Save identity, decentralized Pin Save post and ENS:
 
-![decentralized comments](https://bafybeicvm4vqutptj2nxr4iej75tdgnjkc7fv7zez52uyq2laoswnsz6de.ipfs.w3s.link/Screenshot%20from%202023-01-09%2023-18-48.png)
+![decentralized comments](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/comments.png)
 
 - Decentralized Profile:
 
-![decentralized Profile](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/profile.png)
+![decentralized Profile](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/profile.png)
+
+- Decentralized Profile ENS resolution:
+
+![Pin Save ENS resolution Profile](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/ensProfile.png)
+
+- Pin Save update your profile page:
+
+![Pin Save update your profile page](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/updateProfile.png)
 
 - Video and Image posting:
 
-![Upload](https://bafybeiaj46fxgxax6z3nd45n7p42rh7dbyweyssi3dunr3wfewh7ys2d7y.ipfs.nftstorage.link/)
+![Pin Save Upload](https://bafybeiaj46fxgxax6z3nd45n7p42rh7dbyweyssi3dunr3wfewh7ys2d7y.ipfs.nftstorage.link/)
 
 - Livepeer Video Player:
 
@@ -70,7 +78,8 @@ yarn dev
 
 - Integrated ENS Name and Avatar resolver on Profile Display. [luc.eth profile](https://evm.pinsave.app/profile/0x225f137127d9067788314bc7fcc1f36746a3c3B5).
 - Built API route and React-Query for Pin Save Comments.
-- Added React Context for Orbis Client.
+- Built React Context for Orbis Client.
+- Enhanced page to update your Profile.
 - Refactoring Orbis types.
 - Reported Bug in [Vercel dynamic catch-all routes](https://github.com/vercel/next.js/issues/64507).
 - Removed faulty Lit Orbis encryption.
