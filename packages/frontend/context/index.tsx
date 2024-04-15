@@ -11,6 +11,7 @@ export const OrbisContext = createContext<OrbisContextType | undefined>(
 
 export const OrbisProvider = ({ children }: PropsWithChildren<{}>) => {
   const orbis: IOrbis = new Orbis();
+
   useEffect(() => {
     async function connectOrbis() {
       await orbis.connect_v2({ chain: "ethereum" });

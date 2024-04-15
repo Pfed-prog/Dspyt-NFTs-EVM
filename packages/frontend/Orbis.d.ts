@@ -314,7 +314,7 @@ declare interface IOrbis {
     cover: string;
     username: string;
     description: string;
-    pfpIsNft: {
+    pfpIsNft?: {
       chain: string;
       contract: string;
       tokenId: string;
@@ -436,8 +436,6 @@ declare interface IOrbisProfile {
     twitter_details?: any;
   };
   did: string;
-  last_activity_timestamp: number;
-  hasLit: boolean;
 }
 
 interface IOrbisCredential {

@@ -1,4 +1,7 @@
-import { dropzoneChildren } from "@/components/UploadForm";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 import {
   BackgroundImage,
   Box,
@@ -12,55 +15,33 @@ import {
   TextInput,
   Stack,
 } from "@mantine/core";
-import Image from "next/image";
 import { Dropzone, MIME_TYPES } from "@mantine/dropzone";
 import { showNotification, updateNotification } from "@mantine/notifications";
-import { Orbis } from "@orbisclub/orbis-sdk";
 import { NFTStorage } from "nft.storage";
-import { useAccount } from "wagmi";
-import React, { useState, useEffect } from "react";
 
-const orbis = new Orbis();
+import { dropzoneChildren } from "@/components/UploadForm";
+import { useOrbisContext } from "context";
 
 const Upload = () => {
+  const router = useRouter();
   const [cover, setCover] = useState<File | undefined>();
   const [image, setImage] = useState<File | undefined>();
   const [description, setDescription] = useState<string>();
+
+  const { isConnected, connector } = useAccount();
+  const { orbis } = useOrbisContext();
   const [user, setUser] = useState<IOrbisProfile>();
   const [username, setUsername] = useState<string>();
 
-  const [orbisLogoutState, setOrbisLogoutState] = useState<boolean>(false);
-
-  const { isConnected, connector } = useAccount();
-
   useEffect(() => {
-    async function loadData() {
+    const fetchData = async () => {
       if (isConnected) {
-        const provider = await connector?.getProvider();
-
         let res = await orbis.isConnected();
-
-        if (!res) {
-          res = await orbis.connect_v2({
-            chain: "ethereum",
-            provider: provider,
-            lit: false,
-          });
-        }
         setUser(res);
       }
-    }
-
-    async function orbisLogout() {
-      await orbis.logout();
-    }
-    if (!orbisLogoutState) {
-      loadData();
-    }
-    if (orbisLogoutState) {
-      orbisLogout();
-    }
-  }, [orbisLogoutState, isConnected, connector]);
+    };
+    fetchData();
+  }, [orbis, isConnected, connector]);
 
   async function updateProfile() {
     showNotification({
@@ -90,7 +71,7 @@ const Upload = () => {
       }
 
       await orbis.updateProfile({
-        username: username ?? user?.details.profile?.username,
+        username: username ?? user?.details.profile?.username ?? "",
         pfp: cidPfp ?? user?.details.profile?.pfp ?? "",
         cover: cidCover ?? user?.details.profile?.cover ?? "",
         description: description ?? user?.details.profile?.description ?? "",
@@ -121,44 +102,22 @@ const Upload = () => {
     });
   }
 
-  /*   async function syncProfile() {
-    if (walletClient && universalProfile) {
-      await UpdateProfile({
-        address: universalProfile,
-        name: user?.details.profile?.username,
-        description: user?.details.profile?.description,
-        profileImage: user?.details.profile?.pfp,
-        backgroundImage: user?.details.profile?.cover,
-      });
-    }
-  } */
-
-  /*   async function createProfile() {
-    if (walletClient && address) {
-      const deployedERC725 = await CreateProfile({
-        signer: walletClient,
-        address: address,
-      });
-      setUniversalProfile(deployedERC725);
-    }
-  } */
-
   async function logout() {
-    setUser(undefined);
-    setOrbisLogoutState(true);
+    orbis.logout();
+    router.push("/");
   }
 
   return (
-    <>
+    <div>
       {isConnected && user?.did ? (
-        <>
+        <div>
           <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
             <BackgroundImage
               src={
                 typeof user.details.profile?.cover === "string" &&
                 user.details.profile?.cover !== ""
                   ? user.details.profile?.cover
-                  : "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80"
+                  : "/background.png"
               }
               radius="xs"
               style={{
@@ -361,48 +320,8 @@ const Upload = () => {
                 Submit
               </Button>
             </Center>
-
-            {/*
-              <TextInput
-              my={12}
-              size="md"
-              label="Universal Profile"
-              placeholder="address"
-              value={universalProfile}
-              onChange={(e) =>
-                setUniversalProfile(e.target.value as `0x${string}`)
-              }
-              mx="auto"
-              style={{
-                width: 300,
-                textAlign: "center",
-                WebkitBackgroundClip: "text",
-              }}
-              sx={{
-                background: "green",
-              }}
-            />
-               <Button
-                my={12}
-                mt={20}
-                size="md"
-                onClick={() => syncProfile()}
-                mx="auto"
-              >
-                Sync
-              </Button>
-              <Button
-                my={12}
-                mt={20}
-                size="md"
-                onClick={() => createProfile()}
-                mx="auto"
-              >
-                Create Profile
-              </Button>
-            */}
           </Paper>
-        </>
+        </div>
       ) : null}
       {!isConnected ? (
         <Center>
@@ -412,7 +331,7 @@ const Upload = () => {
           </Stack>
         </Center>
       ) : null}
-    </>
+    </div>
   );
 };
 

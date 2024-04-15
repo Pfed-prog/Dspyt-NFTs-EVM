@@ -3,8 +3,6 @@ import { Orbis } from "@orbisclub/orbis-sdk";
 
 import { contextOrbis } from "@/utils/contextConstant";
 
-const orbis: IOrbis = new Orbis();
-
 type dataOutCorrect = {
   data: IOrbisPost[];
   hasMoreMessages: boolean;
@@ -18,6 +16,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<dataOutCorrect | dataOutError>
 ) {
+  const orbis: IOrbis = new Orbis();
   if (req.method === "POST") {
     const data = req.body;
     const postId: string = String(data.postId);
