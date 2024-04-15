@@ -27,17 +27,21 @@ Pin Save is a decentralized image, video sharing and content aggregation platfor
 
 ## Features
 
-- Decentralized feed of NFTs on Optimism and Ethereum Goerli chains with decentralized storage on IPFS with NFTPort, Estuary and Nft.storage:
+- Decentralized feed of NFTs on Optimism chain with decentralized storage on IPFS with NFTPort, Estuary and Nft.storage:
 
 ![decentralized feed](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/feed.png)
 
-- Decentralized comments section on orbis, ceramic and ipfs connected to a decentralized post and identity:
+- Decentralized comments section on orbis, ceramic and ipfs connected to a decentralized Pin Save identity, decentralized Pin Save post and ENS:
 
-![decentralized comments](https://bafybeicvm4vqutptj2nxr4iej75tdgnjkc7fv7zez52uyq2laoswnsz6de.ipfs.w3s.link/Screenshot%20from%202023-01-09%2023-18-48.png)
+![decentralized comments](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/comments.png)
 
 - Decentralized Profile:
 
 ![decentralized Profile](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/profile.png)
+
+- Decentralized Profile ENS resolution:
+
+![Pin Save ENS resolution Profile](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/ensProfile.png)
 
 - Video and Image posting:
 
