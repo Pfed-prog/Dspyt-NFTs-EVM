@@ -29,23 +29,23 @@ Pin Save is a decentralized image, video sharing and content aggregation platfor
 
 - Decentralized feed of NFTs on Optimism chain with decentralized storage on IPFS with NFTPort, Estuary and Nft.storage:
 
-![decentralized feed](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/feed.png)
+![decentralized feed](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/feed.png)
 
 - Decentralized comments section on orbis, ceramic and ipfs connected to a decentralized Pin Save identity, decentralized Pin Save post and ENS:
 
-![decentralized comments](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/comments.png)
+![decentralized comments](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/comments.png)
 
 - Decentralized Profile:
 
-![decentralized Profile](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/profile.png)
+![decentralized Profile](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/profile.png)
 
 - Decentralized Profile ENS resolution:
 
-![Pin Save ENS resolution Profile](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/ensProfile.png)
+![Pin Save ENS resolution Profile](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/ensProfile.png)
 
 - Pin Save update your profile page:
 
-![Pin Save update your profile page](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/updateProfile.png)
+![Pin Save update your profile page](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/updateProfile.png)
 
 - Video and Image posting:
 
@@ -87,9 +87,26 @@ yarn dev
 
 ## Further Resources
 
-[PinSave Figma Resources](https://www.figma.com/community/file/1102944149244783025)
+- [PinSave Figma Resources](https://www.figma.com/community/file/1102944149244783025)
+- [Zk Ok Pin Save](https://zkok.io/mina/pin-save/)
+- [EthBucharest 2024: Zero Knowledge proofs on Mina, zkPassport and SoulBound NFTs](https://docs.google.com/presentation/d/1OmJJgzk4iFbKexqBw87oU7oh4H9lXlFFh3eas0EF9y8/edit?usp=sharing)
+- [PinSave.app DR](https://ahrefs.com/website-authority-checker/?input=pinsave.app)
+- [Npm Pin Save mina package](https://www.npmjs.com/package/pin-mina)
+- [Pin Save on Dspyt](https://dspyt.com/PinSave)
+- [Pin Save retroPGF3](https://round3.optimism.io/projects/0xc613e2a991ce0dbcf8fae1d6128e67543da9710e14831112fba654cc8fe8c389)
 
-Some interesting links that we keep returning to include and not limited to:
+## RoadMap
+
+We are at the stage where we need to improve read and write speeds for the content on PinSave.
+
+Our Roadmap includes:
+
+- Improving SEO
+- Researching further erc 725 contract and available registry contracts
+- Deploying erc 725 contract once again and syncing orbis profiles
+- Improving posts contract to contain function to display metadata
+
+Some interesting links for developers:
 
 - [Practical React Query](https://tkdodo.eu/blog/practical-react-query)
 - [next/image](https://nextjs.org/docs/api-reference/next/image)
