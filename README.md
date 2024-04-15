@@ -29,23 +29,23 @@ Pin Save is a decentralized image, video sharing and content aggregation platfor
 
 - Decentralized feed of NFTs on Optimism chain with decentralized storage on IPFS with NFTPort, Estuary and Nft.storage:
 
-![decentralized feed](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/feed.png)
+![decentralized feed](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/feed.png)
 
 - Decentralized comments section on orbis, ceramic and ipfs connected to a decentralized Pin Save identity, decentralized Pin Save post and ENS:
 
-![decentralized comments](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/comments.png)
+![decentralized comments](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/comments.png)
 
 - Decentralized Profile:
 
-![decentralized Profile](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/profile.png)
+![decentralized Profile](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/profile.png)
 
 - Decentralized Profile ENS resolution:
 
-![Pin Save ENS resolution Profile](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/ensProfile.png)
+![Pin Save ENS resolution Profile](https://github.com/PinSaveDAO/PinSave-EVM/blob/evm/assets/ensProfile.png)
 
 - Video and Image posting:
 
-![Upload](https://bafybeiaj46fxgxax6z3nd45n7p42rh7dbyweyssi3dunr3wfewh7ys2d7y.ipfs.nftstorage.link/)
+![Pin Save Upload](https://bafybeiaj46fxgxax6z3nd45n7p42rh7dbyweyssi3dunr3wfewh7ys2d7y.ipfs.nftstorage.link/)
 
 - Livepeer Video Player:
 
