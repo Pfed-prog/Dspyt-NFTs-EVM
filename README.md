@@ -84,7 +84,7 @@ yarn dev
 - Reported Bug in [Vercel dynamic catch-all routes](https://github.com/vercel/next.js/issues/64507).
 - Removed faulty Lit Orbis encryption.
 - Connected Vercel Analytics.
-- Built SEO Components and connected on every page.
+- Built SEO Component and connected on every page.
 
 ## Further Resources
 

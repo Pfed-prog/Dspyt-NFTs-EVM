@@ -105,7 +105,7 @@ const UploadForm = () => {
   const [isPostLoading, setIsPostLoading] = useState<boolean>(false);
   const [isPostLoaded, setIsPostLoaded] = useState<boolean>(false);
 
-  const [response, setResponse] = useState<string>("");
+  const [cid, setCid] = useState<string>("");
 
   const [provider, setProvider] = useState<
     "NFT.Storage" | "NFTPort" | "Estuary"
@@ -115,14 +115,12 @@ const UploadForm = () => {
     address: contractAddress,
     abi: abi,
     functionName: "createPost",
-    args: [postReceiver, response, randomBytes32],
+    args: [postReceiver, cid, randomBytes32],
   });
-
   const { data, write: writeMintPost } = useContractWrite(config);
-
   const [lastHash, setLastHash] = useState<string>("");
 
-  async function savePostBeforeUpload(
+  async function saveIPFSPostAndUpload(
     name: string,
     description: string,
     image?: File
@@ -133,7 +131,7 @@ const UploadForm = () => {
         provider: provider,
       });
 
-      setResponse(cid);
+      setCid(cid);
       setRandomBytes32(zeroPadValue(hexlify(randomBytes(32)), 32));
 
       setImage(undefined);
@@ -151,7 +149,7 @@ const UploadForm = () => {
       setIsPostUpdated(true);
       setIsPostLoading(false);
 
-      console.log("Updated response:" + response);
+      console.log("Updated response:" + cid);
     }
 
     if (data?.hash && data?.hash !== lastHash && isPostUpdated) {
@@ -159,7 +157,7 @@ const UploadForm = () => {
       setIsPostLoaded(true);
       setIsPostUpdated(false);
     }
-  }, [isPostLoading, data, isPostLoaded, lastHash, response, isPostUpdated]);
+  }, [isPostLoading, data, isPostLoaded, lastHash, cid, isPostUpdated]);
 
   return (
     <Paper
@@ -201,6 +199,7 @@ const UploadForm = () => {
       />
       <Textarea
         my="lg"
+        required
         onChange={(e) =>
           setPostReceiver(e.target.value as `0x${string}` | undefined)
         }
@@ -232,10 +231,10 @@ const UploadForm = () => {
             radius="lg"
             mt="md"
             onClick={async () =>
-              await savePostBeforeUpload(name, description, image)
+              await saveIPFSPostAndUpload(name, description, image)
             }
           >
-            Save Post
+            Save Post Before Upload
           </Button>
         )}
       </Group>
