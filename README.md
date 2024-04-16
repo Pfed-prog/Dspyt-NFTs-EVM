@@ -77,6 +77,7 @@ yarn dev
 ## Latest Updates
 
 - Integrated ENS Name and Avatar resolver on Profile Display. [luc.eth profile](https://evm.pinsave.app/profile/0x225f137127d9067788314bc7fcc1f36746a3c3B5).
+- Integrated ENS useEnsAddress hook from wagmin on upload page.
 - Built API route and React-Query for Pin Save Comments.
 - Built React Context for Orbis Client.
 - Enhanced page to update your Profile.
