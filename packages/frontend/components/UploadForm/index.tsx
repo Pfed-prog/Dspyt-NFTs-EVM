@@ -1,6 +1,3 @@
-import { UploadData } from "@/services/upload";
-import { getContractInfo } from "@/utils/contracts";
-
 import {
   Text,
   Paper,
@@ -25,6 +22,9 @@ import {
   usePrepareContractWrite,
 } from "wagmi";
 import { zeroPadValue, hexlify, randomBytes } from "ethers";
+
+import { UploadData } from "@/services/upload";
+import { getContractInfo } from "@/utils/contracts";
 
 export const dropzoneChildren = (image: File | undefined) => {
   if (image) {
@@ -86,16 +86,17 @@ export const dropzoneChildren = (image: File | undefined) => {
 const UploadForm = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
-
   const { address: contractAddress, abi } = getContractInfo(chain?.id);
 
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [image, setImage] = useState<File | undefined>();
-  const [postReceiver, setPostReceiver] = useState<string>("");
+  const [postReceiver, setPostReceiver] = useState<`0x${string}` | undefined>(
+    address
+  );
 
   const [randomBytes32, setRandomBytes32] = useState<string>(
-    "0x000000000000000000000000000000000000000000000000000000000000000a",
+    "0x000000000000000000000000000000000000000000000000000000000000000a"
   );
 
   // const [metadata, setMetadata] = useState<PostDataUpload[]>([]);
@@ -106,13 +107,15 @@ const UploadForm = () => {
 
   const [response, setResponse] = useState<string>("");
 
-  const [provider, setProvider] = useState<string>("NFT.Storage");
+  const [provider, setProvider] = useState<
+    "NFT.Storage" | "NFTPort" | "Estuary"
+  >("NFT.Storage");
 
   const { config } = usePrepareContractWrite({
     address: contractAddress,
     abi: abi,
     functionName: "createPost",
-    args: [address, response, randomBytes32],
+    args: [postReceiver, response, randomBytes32],
   });
 
   const { data, write: writeMintPost } = useContractWrite(config);
@@ -122,16 +125,13 @@ const UploadForm = () => {
   async function savePostBeforeUpload(
     name: string,
     description: string,
-    image?: File,
+    image?: File
   ) {
-    if (description !== "" && name !== "" && image && address) {
+    if (description !== "" && name !== "" && image && postReceiver) {
       const cid = await UploadData({
-        receiverAddress: address,
         data: { name: name, description: description, image: image },
         provider: provider,
       });
-
-      //console.log(cid);
 
       setResponse(cid);
       setRandomBytes32(zeroPadValue(hexlify(randomBytes(32)), 32));
@@ -201,7 +201,9 @@ const UploadForm = () => {
       />
       <Textarea
         my="lg"
-        onChange={(e) => setPostReceiver(e.target.value)}
+        onChange={(e) =>
+          setPostReceiver(e.target.value as `0x${string}` | undefined)
+        }
         value={postReceiver}
         label="Post Receiver"
         placeholder="Enter Address You Want To Receive The NFT"
@@ -253,7 +255,11 @@ const UploadForm = () => {
         <NativeSelect
           placeholder="Pick IPFS Provider"
           value={provider}
-          onChange={(event) => setProvider(event.currentTarget.value)}
+          onChange={(event) =>
+            setProvider(
+              event.currentTarget.value as "NFT.Storage" | "NFTPort" | "Estuary"
+            )
+          }
           size="sm"
           data={["NFT.Storage", "NFTPort", "Estuary"]}
         />

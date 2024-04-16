@@ -21,7 +21,6 @@ export type IndividualPost = Post & {
 };
 
 export type UploadingPost = {
-  receiverAddress: `0x${string}`;
   data: PostDataUpload;
   provider?: string;
 };
@@ -57,7 +56,7 @@ export async function UploadData(incomingData: UploadingPost) {
 
     const rawResponse = await fetch(
       "https://api.nftport.xyz/v0/files",
-      options,
+      options
     );
     const content = await rawResponse.json();
 
@@ -80,7 +79,7 @@ export async function UploadData(incomingData: UploadingPost) {
     };
     const rawMetadataResponse = await fetch(
       "https://api.nftport.xyz/v0/metadata",
-      optionsPost,
+      optionsPost
     );
     const metadata = await rawMetadataResponse.json();
 
@@ -115,7 +114,7 @@ export async function UploadData(incomingData: UploadingPost) {
       ],
       {
         type: "application/json",
-      },
+      }
     );
     const files = [new File([blob], "metadata.json")];
 
@@ -131,7 +130,7 @@ export async function UploadData(incomingData: UploadingPost) {
 
     const rawMetadataResponse = await fetch(
       "https://upload.estuary.tech/content/add",
-      optionsPost,
+      optionsPost
     );
     const metadata = await rawMetadataResponse.json();
 
