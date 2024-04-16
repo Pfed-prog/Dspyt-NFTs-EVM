@@ -20,6 +20,7 @@ import {
   useNetwork,
   useContractWrite,
   usePrepareContractWrite,
+  useEnsAddress,
 } from "wagmi";
 import { zeroPadValue, hexlify, randomBytes } from "ethers";
 
@@ -120,6 +121,13 @@ const UploadForm = () => {
   const { data, write: writeMintPost } = useContractWrite(config);
   const [lastHash, setLastHash] = useState<string>("");
 
+  const [ensName, setEnsName] = useState<string>("");
+  const { data: receiverAddress } = useEnsAddress({
+    name: ensName,
+    chainId: 1,
+    cacheTime: 10000,
+  });
+
   async function saveIPFSPostAndUpload(
     name: string,
     description: string,
@@ -151,6 +159,10 @@ const UploadForm = () => {
       setPostReceiver(userAddress);
     }
 
+    if (ensName !== "" && receiverAddress) {
+      setPostReceiver(receiverAddress);
+    }
+
     if (isPostLoading) {
       setIsPostUpdated(true);
       setIsPostLoading(false);
@@ -171,6 +183,7 @@ const UploadForm = () => {
     cid,
     isPostUpdated,
     userAddress,
+    ensName,
   ]);
 
   return (
@@ -204,15 +217,20 @@ const UploadForm = () => {
         onChange={(e) => setName(e.target.value)}
       />
       <Textarea
-        my="lg"
+        my="md"
         required
         onChange={(e) => setDescription(e.target.value)}
         value={description}
         label="Description"
         placeholder="Describe your post here"
       />
-      <Textarea
-        my="lg"
+      <TextInput
+        onChange={(e) => setEnsName(e.target.value as string)}
+        value={ensName}
+        label="ENS name"
+        placeholder="Optional: enter ens name"
+      />
+      <TextInput
         required
         onChange={(e) =>
           setPostReceiver(e.target.value as `0x${string}` | undefined)
@@ -252,7 +270,7 @@ const UploadForm = () => {
           </Button>
         )}
       </Group>
-      <Group position="center" sx={{ padding: 15 }}>
+      <Group position="center" sx={{ padding: 10 }}>
         {isPostUpdated ? (
           <Button
             component="a"
