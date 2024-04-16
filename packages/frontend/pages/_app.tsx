@@ -3,7 +3,6 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import type { NextComponentType } from "next";
 import type AppProps from "next/app";
-import NextHead from "next/head";
 import { Analytics } from "@vercel/analytics/react";
 import {
   LivepeerConfig,
@@ -77,9 +76,6 @@ function MyApp({ Component, pageProps }: NextAppProps) {
     >
       <QueryClientProvider client={queryClient}>
         <WagmiConfig config={wagmiConfig}>
-          <NextHead>
-            <title>Pin Save - decentralized Pinterest</title>
-          </NextHead>
           <NotificationsProvider>
             <RainbowKitProvider chains={chains}>
               <LivepeerConfig client={livepeerClient}>

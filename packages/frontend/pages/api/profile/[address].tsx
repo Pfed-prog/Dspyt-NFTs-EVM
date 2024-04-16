@@ -12,7 +12,7 @@ export default async function handler(
 
     var username = "";
     var pfp = "/IconLarge.png";
-    var cover = "/back.png";
+    var cover = "/background.png";
     var description = "";
     var followers = "";
     var following = "";

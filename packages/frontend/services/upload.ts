@@ -41,7 +41,7 @@ export async function UploadData(incomingData: UploadingPost) {
   }
 
   if (incomingData.provider === "NFTPort") {
-    let image_ipfs;
+    let image_ipfs: string;
 
     const formData = new FormData();
     formData.append("file", incomingData.data.image);

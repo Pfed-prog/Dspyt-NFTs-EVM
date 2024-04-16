@@ -5,6 +5,7 @@ import { ArrowLeft } from "tabler-icons-react";
 import type { ChainName } from "@/constants/chains";
 import MediaDetails from "@/components/Post/MediaDetails";
 import DisplayMedia from "@/components/Post/DisplayMedia";
+import { PageSEO } from "@/components/SEO";
 import { usePost } from "@/hooks/api";
 
 const PostPage = () => {
@@ -15,6 +16,10 @@ const PostPage = () => {
   const { data: postQueried, isLoading } = usePost(currentChain, postId);
   return (
     <div>
+      <PageSEO
+        title={`Pin Save Post ${orbisTag}`}
+        description={`Pin Save Post ${orbisTag}`}
+      />
       <LoadingOverlay visible={isLoading} />
       {postQueried && (
         <div>
