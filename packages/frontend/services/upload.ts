@@ -26,7 +26,7 @@ export type UploadingPost = {
 };
 
 export async function UploadData(incomingData: UploadingPost) {
-  let metadata_url;
+  let metadata_url: string;
 
   if (incomingData.provider === "NFT.Storage") {
     const client = new NFTStorage({
@@ -38,6 +38,7 @@ export async function UploadData(incomingData: UploadingPost) {
     });
 
     metadata_url = metadata.url;
+    return metadata_url;
   }
 
   if (incomingData.provider === "NFTPort") {
@@ -54,12 +55,17 @@ export async function UploadData(incomingData: UploadingPost) {
       },
     };
 
-    const rawResponse = await fetch(
+    const rawResponse: Response = await fetch(
       "https://api.nftport.xyz/v0/files",
       options
     );
-    const content = await rawResponse.json();
-
+    const content: {
+      response: string;
+      ipfs_url: string;
+      file_name: string;
+      content_type: string;
+      file_size: number;
+    } = await rawResponse.json();
     image_ipfs =
       "ipfs://" +
       content.ipfs_url.substring(content.ipfs_url.indexOf("ipfs/") + 5);
@@ -75,15 +81,25 @@ export async function UploadData(incomingData: UploadingPost) {
         name: incomingData.data.name,
         description: incomingData.data.description,
         image: image_ipfs,
+        file_url: image_ipfs,
       }),
     };
-    const rawMetadataResponse = await fetch(
+
+    const rawMetadataResponse: Response = await fetch(
       "https://api.nftport.xyz/v0/metadata",
       optionsPost
     );
-    const metadata = await rawMetadataResponse.json();
 
-    metadata_url = metadata.url;
+    const metadata: {
+      description: string;
+      file_url: string;
+      metadata_uri: string;
+      name: string;
+      response: string;
+    } = await rawMetadataResponse.json();
+
+    metadata_url = metadata.metadata_uri;
+    return metadata_url;
   }
 
   if (incomingData.provider === "Estuary") {
@@ -135,6 +151,6 @@ export async function UploadData(incomingData: UploadingPost) {
     const metadata = await rawMetadataResponse.json();
 
     metadata_url = "ipfs://" + metadata.cid;
+    return metadata_url;
   }
-  return metadata_url;
 }

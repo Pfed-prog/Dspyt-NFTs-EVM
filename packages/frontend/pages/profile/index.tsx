@@ -191,17 +191,19 @@ const Upload = () => {
                       <Text>
                         Following: {user?.details?.count_following ?? 0}
                       </Text>
-                      <Button
-                        my={2}
-                        size="sm"
-                        color="red"
-                        onClick={() => logout()}
-                        style={{
-                          zIndex: 1,
-                        }}
-                      >
-                        Log Out
-                      </Button>
+                      {isConnected ? (
+                        <Button
+                          my={2}
+                          size="sm"
+                          color="red"
+                          onClick={() => logout()}
+                          style={{
+                            zIndex: 1,
+                          }}
+                        >
+                          Log Out
+                        </Button>
+                      ) : null}
                     </Group>
                   </Group>
                 </Card>
