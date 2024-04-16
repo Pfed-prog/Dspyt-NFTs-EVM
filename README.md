@@ -85,6 +85,7 @@ yarn dev
 - Removed faulty Lit Orbis encryption.
 - Connected Vercel Analytics.
 - Built SEO Component and connected on every page.
+- Fixed NFTPort as ipfs provider.
 
 ## Further Resources
 
@@ -102,7 +103,8 @@ We are at the stage where we need to improve read and write speeds for the conte
 
 Our Roadmap includes:
 
-- Improving SEO
+- Further enhancing SEO
+- Fixing faulty Dweb ipfs provider
 - Researching further erc 725 contract and available registry contracts
 - Deploying erc 725 contract once again and syncing orbis profiles
 - Testing Ipfs providers

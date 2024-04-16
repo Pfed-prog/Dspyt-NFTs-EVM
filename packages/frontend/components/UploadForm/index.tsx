@@ -84,7 +84,7 @@ export const dropzoneChildren = (image: File | undefined) => {
 };
 
 const UploadForm = () => {
-  const { address } = useAccount();
+  const { address: userAddress } = useAccount();
   const { chain } = useNetwork();
   const { address: contractAddress, abi } = getContractInfo(chain?.id);
 
@@ -92,7 +92,7 @@ const UploadForm = () => {
   const [description, setDescription] = useState<string>("");
   const [image, setImage] = useState<File | undefined>();
   const [postReceiver, setPostReceiver] = useState<`0x${string}` | undefined>(
-    address
+    userAddress
   );
 
   const [randomBytes32, setRandomBytes32] = useState<string>(
@@ -126,10 +126,14 @@ const UploadForm = () => {
     image?: File
   ) {
     if (description !== "" && name !== "" && image && postReceiver) {
-      const cid = await UploadData({
+      const cid: string | undefined = await UploadData({
         data: { name: name, description: description, image: image },
         provider: provider,
       });
+
+      if (!cid) {
+        throw new Error("no cid");
+      }
 
       setCid(cid);
       setRandomBytes32(zeroPadValue(hexlify(randomBytes(32)), 32));
@@ -139,12 +143,14 @@ const UploadForm = () => {
       setDescription("");
 
       setIsPostLoading(true);
-      return true;
     }
-    return false;
   }
 
   useEffect(() => {
+    if (!postReceiver) {
+      setPostReceiver(userAddress);
+    }
+
     if (isPostLoading) {
       setIsPostUpdated(true);
       setIsPostLoading(false);
@@ -157,7 +163,15 @@ const UploadForm = () => {
       setIsPostLoaded(true);
       setIsPostUpdated(false);
     }
-  }, [isPostLoading, data, isPostLoaded, lastHash, cid, isPostUpdated]);
+  }, [
+    isPostLoading,
+    data,
+    isPostLoaded,
+    lastHash,
+    cid,
+    isPostUpdated,
+    userAddress,
+  ]);
 
   return (
     <Paper
