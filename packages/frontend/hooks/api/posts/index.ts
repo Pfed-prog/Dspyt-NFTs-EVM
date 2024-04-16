@@ -13,7 +13,7 @@ export const usePosts = (chain: ChainName) => {
     initialPageParam: undefined,
     getNextPageParam: (lastPage: any, pages: any) => {
       if (lastPage.items[5]?.token_id < lastPage.totalSupply) {
-        return pages.length;
+        return pages.length + 1;
       }
     },
   });

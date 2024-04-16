@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { mainnet, useEnsName, useEnsAvatar } from "wagmi";
-import { normalize } from "viem/ens";
 import {
   BackgroundImage,
   Box,
@@ -14,6 +13,7 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 
+import { PageSEO } from "@/components/SEO";
 import { useProfile } from "@/hooks/api";
 
 function Post() {
@@ -38,6 +38,10 @@ function Post() {
   } = useProfile(String(address));
   return (
     <div>
+      <PageSEO
+        title={`Pin Save Profile Page ${address}`}
+        description={`Pin Save decentralized Profile Page ${address}`}
+      />
       {isFetched ? (
         <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
           <BackgroundImage

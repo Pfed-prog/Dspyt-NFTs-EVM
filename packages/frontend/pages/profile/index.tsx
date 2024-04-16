@@ -19,6 +19,7 @@ import { Dropzone, MIME_TYPES } from "@mantine/dropzone";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { NFTStorage } from "nft.storage";
 
+import { PageSEO } from "@/components/SEO";
 import { dropzoneChildren } from "@/components/UploadForm";
 import { useOrbisContext } from "context";
 
@@ -115,6 +116,10 @@ const Upload = () => {
 
   return (
     <div>
+      <PageSEO
+        title={`Pin Save Profile Page`}
+        description={`Pin Save decentralized Profile Page`}
+      />
       <div>
         <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
           <BackgroundImage

@@ -84,6 +84,7 @@ yarn dev
 - Reported Bug in [Vercel dynamic catch-all routes](https://github.com/vercel/next.js/issues/64507).
 - Removed faulty Lit Orbis encryption.
 - Connected Vercel Analytics.
+- Built SEO Components and connected on every page.
 
 ## Further Resources
 
@@ -104,6 +105,9 @@ Our Roadmap includes:
 - Improving SEO
 - Researching further erc 725 contract and available registry contracts
 - Deploying erc 725 contract once again and syncing orbis profiles
+- Testing Ipfs providers
+- Improving Upload page with batch mint
+- Improving Upload page UX and UI
 - Improving posts contract to contain function to display metadata
 
 Some interesting links for developers:

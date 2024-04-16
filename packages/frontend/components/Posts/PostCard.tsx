@@ -1,5 +1,5 @@
 import { Player } from "@livepeer/react";
-import { Paper, Text } from "@mantine/core";
+import { Paper, Text, Center } from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,26 +12,22 @@ interface IMyProps {
 
 const PostCard: React.FC<IMyProps> = ({ post }) => {
   return (
-    <Link href={`/optimism/posts/${post.token_id}`}>
-      <Paper
-        component="div"
-        withBorder
-        radius="lg"
-        shadow="md"
-        p="md"
-        sx={{ cursor: "pointer" }}
-      >
-        <div
-          style={{
-            position: "relative",
-            height: 200,
-          }}
+    <Center>
+      <Link href={`/optimism/posts/${post.token_id}`}>
+        <Paper
+          component="div"
+          withBorder
+          radius="lg"
+          shadow="md"
+          p="md"
+          sx={{ cursor: "pointer" }}
         >
           {IsNotMp4(post.image) ? (
             <Image
               src={post.image}
               alt={post.name}
-              fill
+              height={200}
+              width={200}
               sizes="200px"
               style={{ objectFit: "cover", borderRadius: "10px" }}
             />
@@ -46,12 +42,12 @@ const PostCard: React.FC<IMyProps> = ({ post }) => {
               aspectRatio="1to1"
             />
           )}
-        </div>
-        <Text align="center" mt="sm" lineClamp={1}>
-          {post.name}
-        </Text>
-      </Paper>
-    </Link>
+          <Text align="center" mt="sm" lineClamp={1}>
+            {post.name}
+          </Text>
+        </Paper>
+      </Link>
+    </Center>
   );
 };
 
