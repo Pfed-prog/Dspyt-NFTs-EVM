@@ -35,7 +35,7 @@ function Post() {
     data: profileQueried,
     isLoading,
     isFetched,
-  } = useProfile(String(address));
+  } = useProfile(String(userAddress));
   return (
     <div>
       <PageSEO

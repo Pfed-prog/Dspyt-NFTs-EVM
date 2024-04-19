@@ -117,8 +117,8 @@ declare interface IOrbis {
     status: number;
   }>;
   getDids: (address: string) => Promise<{
-    data: any;
-    error: any;
+    data: IOrbisProfile[];
+    error: null | any;
     status: number;
   }>;
   getGroup: (group_id: string) => Promise<{
@@ -411,33 +411,45 @@ interface IOrbisChannel {
 }
 
 declare interface IOrbisProfile {
-  details: {
-    a_r?: number;
-    did: string;
-    metadata: {
-      address?: string;
-      chain?: string;
-      ensName?: string;
-    };
-    count_followers: number;
-    count_following: number;
-    nonces?: any;
-    profile?: {
-      cover?: string;
-      data?: object;
-      description?: string;
-      pfp?: string;
-      pfpIsNft?: {
-        chain: string;
-        contract: string;
-        timestamp: string;
-        tokenId: string;
-      };
-      username?: string;
-    };
-    twitter_details?: any;
-  };
   did: string;
+  username: string | null;
+  details: IOrbisProfileDetails;
+  count_followers: number;
+  address: string | "undefined";
+  count_following: number;
+  last_activity_timestamp: 0;
+  timestamp: number | null;
+}
+
+declare interface IOrbisProfileDetails {
+  did: string;
+  profile: {
+    cover?: string;
+    data?: object;
+    description?: string;
+    pfp?: string;
+    pfpIsNft?: {
+      chain: string;
+      contract: string;
+      timestamp: string;
+      tokenId: string;
+    };
+    username?: string;
+  } | null;
+  stream_id: string | null;
+  encrypted_email: any | null;
+  verified_email: any | null;
+  metadata: {
+    address?: string;
+    chain?: string;
+    ensName?: string;
+  };
+  nonces: object;
+  a_r: number;
+  count_followers: number;
+  count_following: number;
+  twitter_details: any | null;
+  github_details: any | null;
 }
 
 interface IOrbisCredential {

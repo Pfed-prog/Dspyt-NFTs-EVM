@@ -11,7 +11,6 @@ export const useMessagesInfiteQuery = (orbisTag: string) => {
     },
     initialPageParam: undefined,
     getNextPageParam: (lastPage: any, pages: any) => {
-      console.log(lastPage.hasMoreMessages);
       if (Boolean(lastPage.hasMoreMessages)) {
         return pages.length;
       }
