@@ -5,6 +5,8 @@ export const fetchOrbisMessages = async (
   try {
     const apiRoute: string = `/api/messages/orbisPosts`;
     const response: Response = await fetch(apiRoute, {
+      mode: "cors",
+      credentials: "same-origin",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
