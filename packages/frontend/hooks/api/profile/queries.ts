@@ -1,8 +1,7 @@
-import fetcher from "@/utils/fetcher";
-
 export const fetchProfile = async (address: string) => {
   try {
-    return await fetcher(`/api/profile/${address}`);
+    const response: Response = await fetch(`/api/profile/${address}`);
+    return await response.json();
   } catch (error) {
     console.error("Error fetching profile:", error);
     throw error;

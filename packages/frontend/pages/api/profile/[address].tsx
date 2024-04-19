@@ -11,26 +11,31 @@ export default async function handler(
   const userAddress: string = String(address);
 
   var username = "";
-  var pfp = "/IconLarge.png";
+  var pfp = "/Rectangle.png";
   var cover = "/background.png";
   var description = "";
-  var followers = "";
-  var following = "";
+  var followers = 0;
+  var following = 0;
 
   const { data } = await orbis.getDids(userAddress);
 
-  if (data[0].address !== undefined) {
-    username = data[0].details.profile?.username;
-    pfp = data[0].details.profile?.pfp;
+  if (data.length === 0) {
+    res.status(200).json({
+      address: address,
+      username: username,
+      pfp: pfp,
+      cover: cover,
+      description: description,
+      followers: followers,
+      following: following,
+    });
+  }
 
-    if (
-      typeof data[0].details.profile?.cover === "string" &&
-      data[0].details.profile?.cover !== ""
-    ) {
-      cover = data[0].details.profile?.cover;
-    }
-
-    description = data[0].details.profile?.description;
+  if (data[0]) {
+    username = String(data[0].details.profile?.username);
+    pfp = String(data[0].details.profile?.pfp);
+    cover = String(data[0].details.profile?.cover);
+    description = String(data[0].details.profile?.description);
     followers = data[0].details.count_followers;
     following = data[0].details.count_following;
   }

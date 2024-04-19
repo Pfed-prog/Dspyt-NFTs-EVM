@@ -29,7 +29,7 @@ const Upload = () => {
 
   const { orbis } = useOrbisContext();
   const { address: senderAddress } = useAccount();
-  const [user, setUser] = useState<IOrbisProfile>();
+  const [user, setUser] = useState<IOrbisProfileDetails>();
 
   const [cover, setCover] = useState<File | undefined>();
   const [image, setImage] = useState<File | undefined>();
@@ -44,10 +44,10 @@ const Upload = () => {
 
         if (responseIsConnected === false) {
           const responseConnect = await orbis.connect_v2({ chain: "ethereum" });
-          setUser(responseConnect);
+          setUser(responseConnect.details);
         }
         if (responseIsConnected !== false) {
-          setUser(responseIsConnected);
+          setUser(responseIsConnected.details);
         }
       }
     };
@@ -83,10 +83,10 @@ const Upload = () => {
       }
 
       await orbis.updateProfile({
-        username: username ?? user?.details?.profile?.username ?? "",
-        pfp: cidPfp ?? user?.details?.profile?.pfp ?? "/Rectangle.png",
-        cover: cidCover ?? user?.details?.profile?.cover ?? "/background.png",
-        description: description ?? user?.details?.profile?.description ?? "",
+        username: username ?? user?.profile?.username ?? "",
+        pfp: cidPfp ?? user?.profile?.pfp ?? "/Rectangle.png",
+        cover: cidCover ?? user?.profile?.cover ?? "/background.png",
+        description: description ?? user?.profile?.description ?? "",
       });
 
       updateNotification({
@@ -100,13 +100,10 @@ const Upload = () => {
     }
 
     await orbis.updateProfile({
-      username: username ?? user?.details?.profile?.username ?? "",
-      description: description ?? user?.details?.profile?.description ?? "",
-      pfp:
-        user?.details?.profile?.pfp ?? "https://evm.pinsave.app/Rectangle.png",
-      cover:
-        user?.details?.profile?.cover ??
-        "https://evm.pinsave.app/background.png",
+      username: username ?? user?.profile?.username ?? "",
+      description: description ?? user?.profile?.description ?? "",
+      pfp: user?.profile?.pfp ?? "https://evm.pinsave.app/Rectangle.png",
+      cover: user?.profile?.cover ?? "https://evm.pinsave.app/background.png",
     });
 
     updateNotification({
@@ -132,7 +129,7 @@ const Upload = () => {
         <div>
           <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
             <BackgroundImage
-              src={user?.details?.profile?.cover ?? "/background.png"}
+              src={user?.profile?.cover ?? "/background.png"}
               radius="xs"
               style={{
                 height: "auto",
@@ -150,11 +147,8 @@ const Upload = () => {
                     <Image
                       height={200}
                       width={200}
-                      src={user?.details?.profile?.pfp ?? "/Rectangle.png"}
-                      alt={
-                        user?.details?.profile?.username ??
-                        "user profile picture"
-                      }
+                      src={user?.profile?.pfp ?? "/Rectangle.png"}
+                      alt={user?.profile?.username ?? "user profile picture"}
                       style={{
                         borderRadius: "10px",
                         marginTop: "10px",
@@ -177,12 +171,11 @@ const Upload = () => {
                         Connect Wallet to update your profile
                       </Title>
                     )}
-
                     <Title mx="auto" order={2} align="center">
-                      {user?.details?.profile?.username ?? ""}
+                      {user?.profile?.username ?? ""}
                     </Title>
                     <Text mt={15} mx="auto" align="center">
-                      {user?.details?.profile?.description ?? ""}
+                      {user?.profile?.description ?? ""}
                     </Text>
                     <Group mt={10} position="center">
                       <Group position="center" mt="md" mb="xs">
@@ -201,12 +194,8 @@ const Upload = () => {
                           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                           <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0m-2 14v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2m1 -17.87a4 4 0 0 1 0 7.75m5 10.12v-2a4 4 0 0 0 -3 -3.85" />
                         </svg>
-                        <Text>
-                          Followers: {user?.details?.count_followers ?? 0}
-                        </Text>
-                        <Text>
-                          Following: {user?.details?.count_following ?? 0}
-                        </Text>
+                        <Text>Followers: {user?.count_followers ?? 0}</Text>
+                        <Text>Following: {user?.count_following ?? 0}</Text>
                         <Button
                           my={2}
                           size="sm"
