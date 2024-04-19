@@ -26,25 +26,33 @@ import { useOrbisContext } from "context";
 const Upload = () => {
   const [hasMounted, setHasMounted] = useState(false);
   const router = useRouter();
+
+  const { orbis } = useOrbisContext();
+  const { address: senderAddress } = useAccount();
+  const [user, setUser] = useState<IOrbisProfile>();
+
   const [cover, setCover] = useState<File | undefined>();
   const [image, setImage] = useState<File | undefined>();
   const [username, setUsername] = useState<string | undefined>();
   const [description, setDescription] = useState<string | undefined>();
 
-  const { isConnected, connector } = useAccount();
-  const { orbis } = useOrbisContext();
-  const [user, setUser] = useState<IOrbisProfile>();
-
   useEffect(() => {
     setHasMounted(true);
     const fetchData = async () => {
-      if (isConnected) {
-        let res = await orbis.isConnected();
-        setUser(res);
+      if (senderAddress) {
+        const responseIsConnected = await orbis.isConnected();
+
+        if (responseIsConnected === false) {
+          const responseConnect = await orbis.connect();
+          setUser(responseConnect);
+        }
+        if (responseIsConnected !== false) {
+          setUser(responseIsConnected);
+        }
       }
     };
     fetchData();
-  }, [orbis, isConnected, connector]);
+  }, [orbis, senderAddress]);
 
   async function updateProfile() {
     await orbis.isConnected();
@@ -120,7 +128,7 @@ const Upload = () => {
         title={`Pin Save Profile Page`}
         description={`Pin Save decentralized Profile Page`}
       />
-      {hasMounted && (
+      {hasMounted && senderAddress ? (
         <div>
           <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
             <BackgroundImage
@@ -193,19 +201,17 @@ const Upload = () => {
                         <Text>
                           Following: {user?.details?.count_following ?? 0}
                         </Text>
-                        {isConnected && (
-                          <Button
-                            my={2}
-                            size="sm"
-                            color="red"
-                            onClick={() => logout()}
-                            style={{
-                              zIndex: 1,
-                            }}
-                          >
-                            Log Out
-                          </Button>
-                        )}
+                        <Button
+                          my={2}
+                          size="sm"
+                          color="red"
+                          onClick={() => logout()}
+                          style={{
+                            zIndex: 1,
+                          }}
+                        >
+                          Log Out
+                        </Button>
                       </Group>
                     </Group>
                   </Card>
@@ -214,14 +220,17 @@ const Upload = () => {
             </BackgroundImage>
           </Box>
           <Paper
+            mt="xl"
             shadow="xl"
-            p="md"
             radius="lg"
-            sx={{ maxWidth: "700px", backgroundColor: "#82c7fc1d" }}
+            sx={{ maxWidth: "900px", backgroundColor: "#82c7fc1d" }}
             mx="auto"
           >
+            <Title order={1} align="center">
+              Update Profile Data
+            </Title>
             <TextInput
-              my={12}
+              mt="lg"
               size="md"
               label="Change Username"
               placeholder="Username"
@@ -238,7 +247,7 @@ const Upload = () => {
               }}
             />
             <TextInput
-              my={12}
+              mt="sm"
               size="md"
               label="Change Description"
               placeholder="Description"
@@ -255,7 +264,7 @@ const Upload = () => {
               }}
             />
             <Title
-              mt={20}
+              mt="lg"
               order={2}
               align="center"
               style={{
@@ -325,18 +334,18 @@ const Upload = () => {
               </Dropzone>
             </Center>
             <Center>
-              <Button
-                my={12}
-                mt={20}
-                size="md"
-                onClick={() => updateProfile()}
-                mx="auto"
-              >
+              <Button mt="sm" mb="sm" size="md" onClick={() => updateProfile()}>
                 Submit
               </Button>
             </Center>
           </Paper>
         </div>
+      ) : (
+        <Center>
+          <Text>
+            Connect Wallet to update your decentralized Pin Save Profile
+          </Text>
+        </Center>
       )}
     </div>
   );

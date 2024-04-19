@@ -245,7 +245,9 @@ declare interface IOrbis {
     error: any;
     status: number;
   }>;
-  isConnected: (sessionString?: string) => Promise<IOrbisConnectReturns>;
+  isConnected: (
+    sessionString?: string
+  ) => Promise<IOrbisConnectReturns | false>;
   logout: () => {
     status: number;
     result: string;
