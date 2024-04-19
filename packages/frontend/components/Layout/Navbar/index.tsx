@@ -139,7 +139,7 @@ export function Navbar({ links }: NavbarProps) {
       <Header height={80} mb={10} className={classes.root}>
         <Container className={classes.header}>
           <Link href="/">
-            {hasMounted ? (
+            {hasMounted && (
               <Image
                 src={iconLeftPath}
                 alt="Pin Save EVM"
@@ -147,7 +147,7 @@ export function Navbar({ links }: NavbarProps) {
                 height={iconHeight}
                 priority
               />
-            ) : null}
+            )}
           </Link>
           <Group spacing={5} className={classes.links}>
             {items}

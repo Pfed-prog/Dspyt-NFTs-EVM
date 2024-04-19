@@ -52,7 +52,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
       >
         <Text my={2}>{post.description}</Text>
       </Paper>
-      <p style={{ fontSize: "small", color: "#0000008d" }}>
+      <Text style={{ fontSize: "small", color: "#0000008d" }}>
         Owned by:{" "}
         <a style={{ color: "#198b6eb9" }} href={`/profile/${post.owner}`}>
           {post.owner.substring(
@@ -62,7 +62,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
             "..." +
             post.owner.substring(35)}
         </a>
-      </p>
+      </Text>
 
       {!messagesQueried && isLoading && (
         <Center>
@@ -76,7 +76,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
         </Center>
       )}
 
-      {isFetched ? (
+      {isFetched && (
         <div>
           {messagesQueried?.data.map((message: any, i: number) => (
             <Paper
@@ -210,7 +210,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
             </Button>
           </Center>
         </div>
-      ) : null}
+      )}
 
       <Center>
         <TextInput
