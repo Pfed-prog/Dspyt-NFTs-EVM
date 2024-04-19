@@ -174,6 +174,8 @@ const UploadForm = () => {
     }
   }, [
     isPostLoading,
+    postReceiver,
+    receiverAddress,
     data,
     lastHash,
     cid,
