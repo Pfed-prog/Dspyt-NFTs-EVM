@@ -43,7 +43,7 @@ const Upload = () => {
         const responseIsConnected = await orbis.isConnected();
 
         if (responseIsConnected === false) {
-          const responseConnect = await orbis.connect();
+          const responseConnect = await orbis.connect_v2({ chain: "ethereum" });
           setUser(responseConnect);
         }
         if (responseIsConnected !== false) {
@@ -119,7 +119,7 @@ const Upload = () => {
 
   async function logout() {
     orbis.logout();
-    router.push("/");
+    router.reload();
   }
 
   return (
@@ -128,7 +128,7 @@ const Upload = () => {
         title={`Pin Save Profile Page`}
         description={`Pin Save decentralized Profile Page`}
       />
-      {hasMounted && senderAddress ? (
+      {hasMounted && (
         <div>
           <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
             <BackgroundImage
@@ -172,6 +172,12 @@ const Upload = () => {
                       minHeight: 200,
                     }}
                   >
+                    {!senderAddress && (
+                      <Title order={3} mt="sm" mb="sm" align="center">
+                        Connect Wallet to update your profile
+                      </Title>
+                    )}
+
                     <Title mx="auto" order={2} align="center">
                       {user?.details?.profile?.username ?? ""}
                     </Title>
@@ -333,19 +339,20 @@ const Upload = () => {
                 {() => dropzoneChildren(cover)}
               </Dropzone>
             </Center>
-            <Center>
-              <Button mt="sm" mb="sm" size="md" onClick={() => updateProfile()}>
-                Submit
-              </Button>
-            </Center>
+            {senderAddress && (
+              <Center>
+                <Button
+                  mt="sm"
+                  mb="sm"
+                  size="md"
+                  onClick={() => updateProfile()}
+                >
+                  Submit
+                </Button>
+              </Center>
+            )}
           </Paper>
         </div>
-      ) : (
-        <Center>
-          <Text>
-            Connect Wallet to update your decentralized Pin Save Profile
-          </Text>
-        </Center>
       )}
     </div>
   );
