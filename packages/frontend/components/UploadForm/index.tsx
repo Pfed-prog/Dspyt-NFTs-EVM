@@ -208,60 +208,66 @@ const UploadForm = () => {
             >
               Upload a new Post
             </Title>
-            <TextInput
-              required
-              label="Title"
-              placeholder="Post Title"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <Textarea
-              my="md"
-              required
-              onChange={(e) => setDescription(e.target.value)}
-              value={description}
-              label="Description"
-              placeholder="Provide description to your post"
-            />
-            <TextInput
-              onChange={(event) => {
-                setEnsName(event.target.value as string);
-                event.preventDefault();
-              }}
-              value={ensName}
-              label="ENS name"
-              placeholder="Optional: enter receiver ENS name"
-            />
-            <TextInput
-              required
-              onChange={(e) =>
-                setPostReceiver(e.target.value as `0x${string}` | undefined)
-              }
-              value={postReceiver}
-              label="Post Receiver"
-              placeholder="Enter Address You Want To Receive The NFT"
-            />
-            <Dropzone
-              mt="md"
-              onReject={(files) => console.log("rejected files", files)}
-              onDrop={(files) => setImage(files[0])}
-              maxSize={25000000}
-              multiple={false}
-              accept={[
-                MIME_TYPES.png,
-                MIME_TYPES.jpeg,
-                MIME_TYPES.webp,
-                MIME_TYPES.svg,
-                MIME_TYPES.gif,
-                MIME_TYPES.mp4,
-              ]}
-            >
-              {() => dropzoneChildren(image)}
-            </Dropzone>
-            <Group position="center" sx={{ padding: 10 }}>
-              {senderAddress && (
-                <div>
-                  {!isPostUpdated ? (
+            {!senderAddress && (
+              <Title order={2} align="center">
+                Connect your wallet to upload a post
+              </Title>
+            )}
+
+            {!isPostUpdated ? (
+              <div>
+                <TextInput
+                  required
+                  label="Title"
+                  placeholder="Post Title"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <Textarea
+                  my="md"
+                  required
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                  label="Description"
+                  placeholder="Provide description to your post"
+                />
+                <TextInput
+                  onChange={(event) => {
+                    setEnsName(event.target.value as string);
+                    event.preventDefault();
+                  }}
+                  value={ensName}
+                  label="ENS name"
+                  placeholder="Optional: enter receiver ENS name"
+                />
+                <TextInput
+                  required
+                  onChange={(e) =>
+                    setPostReceiver(e.target.value as `0x${string}` | undefined)
+                  }
+                  value={postReceiver}
+                  label="Post Receiver"
+                  placeholder="Enter Address You Want To Receive The NFT"
+                />
+                <Dropzone
+                  mt="md"
+                  onReject={(files) => console.log("rejected files", files)}
+                  onDrop={(files) => setImage(files[0])}
+                  maxSize={25000000}
+                  multiple={false}
+                  accept={[
+                    MIME_TYPES.png,
+                    MIME_TYPES.jpeg,
+                    MIME_TYPES.webp,
+                    MIME_TYPES.svg,
+                    MIME_TYPES.gif,
+                    MIME_TYPES.mp4,
+                  ]}
+                >
+                  {() => dropzoneChildren(image)}
+                </Dropzone>
+                <Group position="center" sx={{ padding: 10 }}>
+                  {senderAddress && (
                     <Button
                       component="a"
                       radius="lg"
@@ -272,37 +278,39 @@ const UploadForm = () => {
                     >
                       Save Post Before Upload
                     </Button>
-                  ) : (
-                    <Button
-                      component="a"
-                      radius="lg"
-                      mt="md"
-                      onClick={() => {
-                        writeMintPost?.();
-                      }}
-                    >
-                      Upload Post
-                    </Button>
                   )}
-                </div>
-              )}
-            </Group>
-            <Center>
-              <NativeSelect
-                placeholder="Pick IPFS Provider"
-                value={provider}
-                onChange={(event) =>
-                  setProvider(
-                    event.currentTarget.value as
-                      | "NFT.Storage"
-                      | "NFTPort"
-                      | "Estuary"
-                  )
-                }
-                size="sm"
-                data={["NFT.Storage", "NFTPort", "Estuary"]}
-              />
-            </Center>
+                </Group>
+                <Center>
+                  <NativeSelect
+                    placeholder="Pick IPFS Provider"
+                    value={provider}
+                    onChange={(event) =>
+                      setProvider(
+                        event.currentTarget.value as
+                          | "NFT.Storage"
+                          | "NFTPort"
+                          | "Estuary"
+                      )
+                    }
+                    size="sm"
+                    data={["NFT.Storage", "NFTPort", "Estuary"]}
+                  />
+                </Center>
+              </div>
+            ) : (
+              <Center>
+                <Button
+                  component="a"
+                  radius="lg"
+                  mt="md"
+                  onClick={() => {
+                    writeMintPost?.();
+                  }}
+                >
+                  Upload Post
+                </Button>
+              </Center>
+            )}
           </Paper>
         </div>
       )}
