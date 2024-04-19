@@ -85,7 +85,8 @@ export const dropzoneChildren = (image: File | undefined) => {
 };
 
 const UploadForm = () => {
-  const { address: userAddress } = useAccount();
+  const [hasMounted, setHasMounted] = useState(false);
+  const { address: senderAddress } = useAccount();
   const { chain } = useNetwork();
   const { address: contractAddress, abi } = getContractInfo(chain?.id);
 
@@ -93,18 +94,15 @@ const UploadForm = () => {
   const [description, setDescription] = useState<string>("");
   const [image, setImage] = useState<File | undefined>();
   const [postReceiver, setPostReceiver] = useState<`0x${string}` | undefined>(
-    userAddress
+    senderAddress
   );
 
   const [randomBytes32, setRandomBytes32] = useState<string>(
     "0x000000000000000000000000000000000000000000000000000000000000000a"
   );
 
-  // const [metadata, setMetadata] = useState<PostDataUpload[]>([]);
-
   const [isPostUpdated, setIsPostUpdated] = useState<boolean>(false);
   const [isPostLoading, setIsPostLoading] = useState<boolean>(false);
-  const [isPostLoaded, setIsPostLoaded] = useState<boolean>(false);
 
   const [cid, setCid] = useState<string>("");
 
@@ -155,8 +153,9 @@ const UploadForm = () => {
   }
 
   useEffect(() => {
+    setHasMounted(true);
     if (!postReceiver) {
-      setPostReceiver(userAddress);
+      setPostReceiver(senderAddress);
     }
 
     if (ensName !== "" && receiverAddress) {
@@ -165,137 +164,149 @@ const UploadForm = () => {
 
     if (isPostLoading) {
       setIsPostUpdated(true);
-      setIsPostLoading(false);
-
       console.log("Updated response:" + cid);
     }
 
     if (data?.hash && data?.hash !== lastHash && isPostUpdated) {
       setLastHash(data.hash);
-      setIsPostLoaded(true);
       setIsPostUpdated(false);
+      setIsPostLoading(false);
     }
   }, [
     isPostLoading,
     data,
-    isPostLoaded,
     lastHash,
     cid,
     isPostUpdated,
-    userAddress,
+    senderAddress,
     ensName,
   ]);
 
   return (
-    <Paper
-      withBorder
-      shadow="xl"
-      p="xl"
-      radius="lg"
-      sx={{ maxWidth: "900px" }}
-      mx="auto"
-    >
-      <Title
-        order={1}
-        my="lg"
-        align="center"
-        style={{
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-        }}
-        sx={(theme) => ({
-          background: theme.fn.radialGradient("green", "lime"),
-        })}
-      >
-        Upload a new Post
-      </Title>
-      <TextInput
-        required
-        label="Title"
-        placeholder="Post Title"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <Textarea
-        my="md"
-        required
-        onChange={(e) => setDescription(e.target.value)}
-        value={description}
-        label="Description"
-        placeholder="Describe your post here"
-      />
-      <TextInput
-        onChange={(e) => setEnsName(e.target.value as string)}
-        value={ensName}
-        label="ENS name"
-        placeholder="Optional: enter ens name"
-      />
-      <TextInput
-        required
-        onChange={(e) =>
-          setPostReceiver(e.target.value as `0x${string}` | undefined)
-        }
-        value={postReceiver}
-        label="Post Receiver"
-        placeholder="Enter Address You Want To Receive The NFT"
-      />
-      <Dropzone
-        mt="md"
-        onReject={(files) => console.log("rejected files", files)}
-        onDrop={(files) => setImage(files[0])}
-        maxSize={25000000}
-        multiple={false}
-        accept={[
-          MIME_TYPES.png,
-          MIME_TYPES.jpeg,
-          MIME_TYPES.webp,
-          MIME_TYPES.svg,
-          MIME_TYPES.gif,
-          MIME_TYPES.mp4,
-        ]}
-      >
-        {() => dropzoneChildren(image)}
-      </Dropzone>
-      <Group position="center" sx={{ padding: 15 }}>
-        {isPostLoading ? null : (
-          <Button
-            component="a"
+    <div>
+      {hasMounted && (
+        <div>
+          <Paper
+            withBorder
+            shadow="xl"
+            p="xl"
             radius="lg"
-            mt="md"
-            onClick={async () =>
-              await saveIPFSPostAndUpload(name, description, image)
-            }
+            sx={{ maxWidth: "900px" }}
+            mx="auto"
           >
-            Save Post Before Upload
-          </Button>
-        )}
-      </Group>
-      <Group position="center" sx={{ padding: 10 }}>
-        {isPostUpdated ? (
-          <Button
-            component="a"
-            radius="lg"
-            mt="md"
-            onClick={() => writeMintPost?.()}
-          >
-            Upload Post
-          </Button>
-        ) : null}
-      </Group>
-      <Center>
-        <NativeSelect
-          placeholder="Pick IPFS Provider"
-          value={provider}
-          onChange={(event) =>
-            setProvider(
-              event.currentTarget.value as "NFT.Storage" | "NFTPort" | "Estuary"
-            )
-          }
-          size="sm"
-          data={["NFT.Storage", "NFTPort", "Estuary"]}
-        />
-      </Center>
-    </Paper>
+            <Title
+              order={1}
+              my="sm"
+              align="center"
+              style={{
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+              sx={(theme) => ({
+                background: theme.fn.radialGradient("green", "lime"),
+              })}
+            >
+              Upload a new Post
+            </Title>
+            <TextInput
+              required
+              label="Title"
+              placeholder="Post Title"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Textarea
+              my="md"
+              required
+              onChange={(e) => setDescription(e.target.value)}
+              value={description}
+              label="Description"
+              placeholder="Provide description to your post"
+            />
+            <TextInput
+              onChange={(event) => {
+                setEnsName(event.target.value as string);
+                event.preventDefault();
+              }}
+              value={ensName}
+              label="ENS name"
+              placeholder="Optional: enter receiver ENS name"
+            />
+            <TextInput
+              required
+              onChange={(e) =>
+                setPostReceiver(e.target.value as `0x${string}` | undefined)
+              }
+              value={postReceiver}
+              label="Post Receiver"
+              placeholder="Enter Address You Want To Receive The NFT"
+            />
+            <Dropzone
+              mt="md"
+              onReject={(files) => console.log("rejected files", files)}
+              onDrop={(files) => setImage(files[0])}
+              maxSize={25000000}
+              multiple={false}
+              accept={[
+                MIME_TYPES.png,
+                MIME_TYPES.jpeg,
+                MIME_TYPES.webp,
+                MIME_TYPES.svg,
+                MIME_TYPES.gif,
+                MIME_TYPES.mp4,
+              ]}
+            >
+              {() => dropzoneChildren(image)}
+            </Dropzone>
+            <Group position="center" sx={{ padding: 10 }}>
+              {senderAddress && (
+                <div>
+                  {!isPostUpdated ? (
+                    <Button
+                      component="a"
+                      radius="lg"
+                      mt="md"
+                      onClick={async () =>
+                        await saveIPFSPostAndUpload(name, description, image)
+                      }
+                    >
+                      Save Post Before Upload
+                    </Button>
+                  ) : (
+                    <Button
+                      component="a"
+                      radius="lg"
+                      mt="md"
+                      onClick={() => {
+                        writeMintPost?.();
+                      }}
+                    >
+                      Upload Post
+                    </Button>
+                  )}
+                </div>
+              )}
+            </Group>
+            <Center>
+              <NativeSelect
+                placeholder="Pick IPFS Provider"
+                value={provider}
+                onChange={(event) =>
+                  setProvider(
+                    event.currentTarget.value as
+                      | "NFT.Storage"
+                      | "NFTPort"
+                      | "Estuary"
+                  )
+                }
+                size="sm"
+                data={["NFT.Storage", "NFTPort", "Estuary"]}
+              />
+            </Center>
+          </Paper>
+        </div>
+      )}
+    </div>
   );
 };
 

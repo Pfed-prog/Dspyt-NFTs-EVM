@@ -10,7 +10,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "pinsave.app",
+        hostname: "**.pinsave.app",
       },
     ],
     minimumCacheTTL: 31536000,
