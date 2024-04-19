@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useAccount } from "wagmi";
+import { NFTStorage } from "nft.storage";
 import {
   BackgroundImage,
   Box,
@@ -17,11 +17,12 @@ import {
 } from "@mantine/core";
 import { Dropzone, MIME_TYPES } from "@mantine/dropzone";
 import { showNotification, updateNotification } from "@mantine/notifications";
-import { NFTStorage } from "nft.storage";
+import { useAccount } from "wagmi";
 
-import { PageSEO } from "@/components/SEO";
-import { dropzoneChildren } from "@/components/UploadForm";
 import { useOrbisContext } from "context";
+import { PageSEO } from "@/components/SEO";
+import TwoPersonsIcon from "@/components/Icons/TwoPersonsIcon";
+import { dropzoneChildren } from "@/components/UploadForm";
 
 const Upload = () => {
   const [hasMounted, setHasMounted] = useState(false);
@@ -136,82 +137,67 @@ const Upload = () => {
                 borderRadius: "10px",
               }}
             >
-              <Center>
-                <Stack
-                  spacing="xs"
-                  sx={{
-                    height: 400,
+              <Stack
+                spacing="xs"
+                sx={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  maxHeight: 600,
+                }}
+              >
+                <Image
+                  height={200}
+                  width={200}
+                  src={user?.profile?.pfp ?? "/Rectangle.png"}
+                  alt={user?.profile?.username ?? "user profile picture"}
+                  style={{
+                    borderRadius: "10px",
+                    marginTop: "10px",
+                  }}
+                />
+                <Card
+                  shadow="sm"
+                  p="lg"
+                  radius="lg"
+                  withBorder
+                  mx="auto"
+                  style={{
+                    maxWidth: 400,
+                    maxHeight: 600,
+                    width: "96%",
                   }}
                 >
-                  <Center>
-                    <Image
-                      height={200}
-                      width={200}
-                      src={user?.profile?.pfp ?? "/Rectangle.png"}
-                      alt={user?.profile?.username ?? "user profile picture"}
-                      style={{
-                        borderRadius: "10px",
-                        marginTop: "10px",
-                      }}
-                    />
-                  </Center>
-                  <Card
-                    shadow="sm"
-                    p="lg"
-                    radius="lg"
-                    withBorder
-                    mx="auto"
-                    style={{
-                      minWidth: 400,
-                      minHeight: 200,
-                    }}
-                  >
-                    {!senderAddress && (
-                      <Title order={3} mt="sm" mb="sm" align="center">
-                        Connect Wallet to update your profile
-                      </Title>
-                    )}
-                    <Title mx="auto" order={2} align="center">
-                      {user?.profile?.username ?? ""}
+                  {!senderAddress && (
+                    <Title order={3} mt="sm" mb="sm" align="center">
+                      Connect Wallet to update your profile
                     </Title>
-                    <Text mt={15} mx="auto" align="center">
-                      {user?.profile?.description ?? ""}
-                    </Text>
-                    <Group mt={10} position="center">
-                      <Group position="center" mt="md" mb="xs">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="icon icon-tabler icon-tabler-users"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          strokeWidth="2"
-                          stroke="currentColor"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                          <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0m-2 14v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2m1 -17.87a4 4 0 0 1 0 7.75m5 10.12v-2a4 4 0 0 0 -3 -3.85" />
-                        </svg>
-                        <Text>Followers: {user?.count_followers ?? 0}</Text>
-                        <Text>Following: {user?.count_following ?? 0}</Text>
-                        <Button
-                          my={2}
-                          size="sm"
-                          color="red"
-                          onClick={() => logout()}
-                          style={{
-                            zIndex: 1,
-                          }}
-                        >
-                          Log Out
-                        </Button>
-                      </Group>
+                  )}
+                  <Title mx="auto" order={2} align="center">
+                    {user?.profile?.username ?? ""}
+                  </Title>
+                  <Text mt={15} mx="auto" align="center">
+                    {user?.profile?.description ?? ""}
+                  </Text>
+                  <Group mt={10} position="center">
+                    <Group position="center" mt="md" mb="xs">
+                      <TwoPersonsIcon />
+                      <Text>Followers: {user?.count_followers ?? 0}</Text>
+                      <Text>Following: {user?.count_following ?? 0}</Text>
+                      <Button
+                        my={2}
+                        size="sm"
+                        color="red"
+                        onClick={() => logout()}
+                        style={{
+                          zIndex: 1,
+                        }}
+                      >
+                        Log Out
+                      </Button>
                     </Group>
-                  </Card>
-                </Stack>
-              </Center>
+                  </Group>
+                </Card>
+              </Stack>
             </BackgroundImage>
           </Box>
           <Paper
@@ -233,7 +219,7 @@ const Upload = () => {
               onChange={(e) => setUsername(e.target.value as `0x${string}`)}
               mx="auto"
               style={{
-                width: 300,
+                maxWidth: 400,
                 textAlign: "center",
                 WebkitBackgroundClip: "text",
               }}
@@ -250,7 +236,7 @@ const Upload = () => {
               onChange={(e) => setDescription(e.target.value)}
               mx="auto"
               style={{
-                width: 300,
+                maxWidth: 400,
                 textAlign: "center",
                 WebkitBackgroundClip: "text",
               }}
