@@ -84,6 +84,7 @@ function Post() {
                   mx="auto"
                   style={{
                     minHeight: 120,
+                    width: "95%",
                   }}
                 >
                   <Center>
