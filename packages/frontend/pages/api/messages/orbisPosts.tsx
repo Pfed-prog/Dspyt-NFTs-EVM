@@ -19,6 +19,7 @@ export default async function handler(
   const orbis: IOrbis = new Orbis();
   if (req.method === "POST") {
     const data = req.body;
+    console.log(data);
     const postId: string = String(data.postId);
     const page: number = Number(data.page);
 
