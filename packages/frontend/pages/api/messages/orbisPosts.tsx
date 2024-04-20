@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Orbis } from "@orbisclub/orbis-sdk";
+import { Provider } from "ethers";
 
 import { contextOrbis } from "@/utils/contextConstant";
 
@@ -18,6 +19,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const orbis: IOrbis = new Orbis();
+    console.log(orbis);
     const data: { postId: string; page: number } = req.body;
     console.log(data);
     const postId: string = String(data.postId);
@@ -34,7 +36,7 @@ export default async function handler(
     );
     const lenResult: number = result.data.length;
     const hasMoreMessages: boolean = lenResult === 5;
-
+    console.log(result);
     res.status(200).json({
       data: result.data,
       hasMoreMessages: hasMoreMessages,
