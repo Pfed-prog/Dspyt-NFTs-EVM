@@ -51,6 +51,7 @@ const DisplayMedia: React.FC<IMyProps> = ({ post }) => {
           src={post.image}
           alt={post.name}
           style={{
+            height: "95%",
             borderRadius: "10px",
             maxHeight: height,
             maxWidth: width,
