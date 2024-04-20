@@ -11,12 +11,15 @@ interface IMyProps {
 }
 
 const DisplayMedia: React.FC<IMyProps> = ({ post }) => {
-  const xlScreenWidth = useMediaQuery("(min-width: 2000px)");
+  const xxlScreenWidth = useMediaQuery("(min-width: 2000px)");
+  const xlScreenWidth = useMediaQuery("(min-width: 1500px)");
   const largeScreenWidth = useMediaQuery("(min-width: 1200px)");
   const mediumScreenWidth = useMediaQuery("(min-width: 700px)");
   const smallScreenWidth = useMediaQuery("(min-width: 500px)");
-  const width = xlScreenWidth
-    ? 800
+  const width = xxlScreenWidth
+    ? 1000
+    : xlScreenWidth
+    ? 700
     : largeScreenWidth
     ? 600
     : mediumScreenWidth
@@ -24,20 +27,20 @@ const DisplayMedia: React.FC<IMyProps> = ({ post }) => {
     : smallScreenWidth
     ? 400
     : 300;
-  const xlScreenHeight = useMediaQuery("(min-height: 1400px)");
-  const largeScreenHeight = useMediaQuery("(min-height: 1200px)");
-  const mediumScreenHeight = useMediaQuery("(min-height: 700px)");
-  const smallScreenHeight = useMediaQuery("(min-height: 500px)");
+  const xlScreenHeight = useMediaQuery("(min-height: 1000px)");
+  const largeScreenHeight = useMediaQuery("(min-height: 800px)");
+  const mediumScreenHeight = useMediaQuery("(min-height: 600px)");
+  const smallScreenHeight = useMediaQuery("(min-height: 400px)");
 
   const height = xlScreenHeight
-    ? 1200
+    ? 850
     : largeScreenHeight
-    ? 600
+    ? 650
     : mediumScreenHeight
-    ? 500
+    ? 450
     : smallScreenHeight
-    ? 400
-    : 300;
+    ? 325
+    : 250;
 
   return (
     <Center>
