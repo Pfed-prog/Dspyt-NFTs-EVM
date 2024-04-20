@@ -11,11 +11,34 @@ interface IMyProps {
 }
 
 const DisplayMedia: React.FC<IMyProps> = ({ post }) => {
-  const xlScreen = useMediaQuery("(min-width: 2000px)");
-  const largeScreen = useMediaQuery("(min-width: 1200px)");
-  const mediumScreen = useMediaQuery("(min-width: 700px)");
-  const height = xlScreen ? 1200 : largeScreen ? 700 : mediumScreen ? 600 : 300;
-  const width = xlScreen ? 800 : largeScreen ? 600 : mediumScreen ? 400 : 200;
+  const xlScreenWidth = useMediaQuery("(min-width: 2000px)");
+  const largeScreenWidth = useMediaQuery("(min-width: 1200px)");
+  const mediumScreenWidth = useMediaQuery("(min-width: 700px)");
+  const smallScreenWidth = useMediaQuery("(min-width: 500px)");
+  const width = xlScreenWidth
+    ? 800
+    : largeScreenWidth
+    ? 600
+    : mediumScreenWidth
+    ? 500
+    : smallScreenWidth
+    ? 400
+    : 300;
+  const xlScreenHeight = useMediaQuery("(min-height: 1400px)");
+  const largeScreenHeight = useMediaQuery("(min-height: 1200px)");
+  const mediumScreenHeight = useMediaQuery("(min-height: 700px)");
+  const smallScreenHeight = useMediaQuery("(min-height: 500px)");
+
+  const height = xlScreenHeight
+    ? 1200
+    : largeScreenHeight
+    ? 700
+    : mediumScreenHeight
+    ? 500
+    : smallScreenHeight
+    ? 350
+    : 250;
+
   return (
     <Center>
       {IsNotMp4(post?.image) ? (
