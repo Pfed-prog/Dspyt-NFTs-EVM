@@ -16,9 +16,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<dataOutCorrect | dataOutError>
 ) {
-  const orbis: IOrbis = new Orbis();
   if (req.method === "POST") {
-    const data = req.body;
+    const orbis: IOrbis = new Orbis();
+    const data: { postId: string; page: number } = req.body;
     console.log(data);
     const postId: string = String(data.postId);
     const page: number = Number(data.page);
