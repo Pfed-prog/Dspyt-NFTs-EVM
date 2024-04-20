@@ -32,12 +32,12 @@ const DisplayMedia: React.FC<IMyProps> = ({ post }) => {
   const height = xlScreenHeight
     ? 1200
     : largeScreenHeight
-    ? 700
+    ? 600
     : mediumScreenHeight
     ? 500
     : smallScreenHeight
-    ? 350
-    : 250;
+    ? 400
+    : 300;
 
   return (
     <Center>
