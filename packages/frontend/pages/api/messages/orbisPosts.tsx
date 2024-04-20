@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Orbis } from "@orbisclub/orbis-sdk";
-import { Provider } from "ethers";
 
 import { contextOrbis } from "@/utils/contextConstant";
 
@@ -9,13 +8,9 @@ type dataOutCorrect = {
   hasMoreMessages: boolean;
 };
 
-type dataOutError = {
-  error: string;
-};
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<dataOutCorrect | dataOutError>
+  res: NextApiResponse<dataOutCorrect>
 ) {
   if (req.method === "POST") {
     const orbis: IOrbis = new Orbis();
@@ -36,11 +31,11 @@ export default async function handler(
     );
     const lenResult: number = result.data.length;
     const hasMoreMessages: boolean = lenResult === 5;
-    console.log(result);
+    console.log(result.data);
+    console.log(hasMoreMessages);
     res.status(200).json({
       data: result.data,
       hasMoreMessages: hasMoreMessages,
     });
   }
-  res.status(500).json({ error: "failed to fetch data" });
 }
