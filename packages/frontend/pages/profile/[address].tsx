@@ -27,6 +27,7 @@ function Post() {
     address: userAddress,
     chainId: mainnet.id,
   });
+
   const { data: ensAvatar } = useEnsAvatar({
     name: ensName,
     chainId: 1,
@@ -57,7 +58,6 @@ function Post() {
               <Stack
                 spacing="xs"
                 sx={{
-                  maxHeight: 600,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
