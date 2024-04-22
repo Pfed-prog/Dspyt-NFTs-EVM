@@ -19,22 +19,11 @@ export default async function handler(
   }
 
   if (data[0]) {
-    let username: string | undefined = data[0].details.profile?.username;
-    if (username === "undefined" || undefined) {
-      username = undefined;
-    }
-    let pfp: string | undefined = data[0].details.profile?.pfp;
-    if (pfp === "undefined" || undefined) {
-      pfp = undefined;
-    }
-    let cover: string | undefined = data[0].details.profile?.cover;
-    if (cover === "undefined" || undefined) {
-      cover = undefined;
-    }
-    let description: string | undefined = data[0].details.profile?.description;
-    if (description === "undefined" || undefined) {
-      description = undefined;
-    }
+    const username: string | undefined = data[0].details.profile?.username;
+    const pfp: string | undefined = data[0].details.profile?.pfp;
+    const cover: string | undefined = data[0].details.profile?.cover;
+    const description: string | undefined =
+      data[0].details.profile?.description;
     const followers: number = data[0].details.count_followers;
     const following: number = data[0].details.count_following;
 
