@@ -1,5 +1,5 @@
 import { ActionIcon, SimpleGrid, LoadingOverlay } from "@mantine/core";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import { ArrowLeft } from "tabler-icons-react";
 
 import type { ChainName } from "@/constants/chains";
@@ -9,7 +9,7 @@ import { PageSEO } from "@/components/SEO";
 import { usePost } from "@/hooks/api";
 
 const PostPage = () => {
-  const router = useRouter();
+  const router: NextRouter = useRouter();
   const currentChain: ChainName = "optimism";
   const postId: string = String(router.query.id);
   const orbisTag: string = `${currentChain}: ${postId}`;
