@@ -529,8 +529,10 @@ interface IOrbisPostContent {
 }
 
 declare interface IOrbisPost {
+  stream_id: string;
+  type: string | null;
   content: IOrbisPostContent;
-  context?: string;
+  context: string;
   context_details?: {
     channel_details?: IOrbisChannel["content"];
     channel_id?: string;
@@ -544,21 +546,18 @@ declare interface IOrbisPost {
   count_replies: number;
   creator: string;
   creator_details: IOrbisProfile["details"];
-  group_id?: string | null;
   indexing_metadata?: {
     language?: string;
     urlMetadata?: Record<string, string>;
   };
-  master?: string | null;
-  reply_to?: string | null;
-  reply_to_creator_details?: Pick<
+  master: string | null;
+  reply_to: string | null;
+  reply_to_creator_details: Pick<
     IOrbisProfile["details"],
     "did" | "metadata" | "profile"
-  >;
-  reply_to_details?: IOrbisPostContent;
-  stream_id: string;
+  > | null;
+  reply_to_details: null;
   timestamp: number;
-  type?: string;
 }
 
 declare interface IOrbisMessageContent {

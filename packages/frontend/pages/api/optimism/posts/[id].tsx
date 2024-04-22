@@ -23,9 +23,12 @@ export default async function handler(
     const objectJsonMetadata: ObjectJsonMetadata =
       await fetchDecodedPost(linkMetadata);
 
+    const author: string = await contract.getPostAuthor(id);
     const owner: string = await contract.getPostOwner(id);
 
-    res.status(200).json({ ...objectJsonMetadata, owner: owner });
+    res
+      .status(200)
+      .json({ ...objectJsonMetadata, author: author, owner: owner });
   } catch (err) {
     res.status(500).send({ error: "failed to fetch data" + err });
   }
