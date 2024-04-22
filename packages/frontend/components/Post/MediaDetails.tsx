@@ -52,6 +52,19 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
       >
         <Text my={2}>{post.description}</Text>
       </Paper>
+
+      <Text style={{ fontSize: "small", color: "#0000008d" }}>
+        Author:{" "}
+        <a style={{ color: "#198b6eb9" }} href={`/profile/${post.author}`}>
+          {post.author.substring(
+            post.author.indexOf(":0x") + 1,
+            post.author.indexOf(":0x") + 8
+          ) +
+            "..." +
+            post.author.substring(35)}
+        </a>
+      </Text>
+
       <Text style={{ fontSize: "small", color: "#0000008d" }}>
         Owned by:{" "}
         <a style={{ color: "#198b6eb9" }} href={`/profile/${post.owner}`}>
@@ -78,9 +91,9 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
 
       {isFetched && (
         <div>
-          {messagesQueried?.data.map((message: any, i: number) => (
+          {messagesQueried?.data.map((message: IOrbisPost) => (
             <Paper
-              key={i}
+              key={message.stream_id}
               shadow="xs"
               mt={4}
               sx={{ backgroundColor: "#80c7fc1d" }}

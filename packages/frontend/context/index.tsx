@@ -1,4 +1,10 @@
-import { useEffect, createContext, useContext, PropsWithChildren } from "react";
+import {
+  useEffect,
+  createContext,
+  useContext,
+  PropsWithChildren,
+  useMemo,
+} from "react";
 import { Orbis } from "@orbisclub/orbis-sdk";
 import { useAccount } from "wagmi";
 
@@ -14,6 +20,8 @@ export const OrbisProvider = ({ children }: PropsWithChildren<{}>) => {
   const { address: senderAddress } = useAccount();
   const orbis: IOrbis = new Orbis();
 
+  const orbisProviderValue = useMemo(() => ({ orbis }), [orbis]);
+
   useEffect(() => {
     async function connectOrbis() {
       await orbis.connect_v2({ chain: "ethereum" });
@@ -22,8 +30,11 @@ export const OrbisProvider = ({ children }: PropsWithChildren<{}>) => {
       connectOrbis();
     }
   }, [senderAddress]);
+
   return (
-    <OrbisContext.Provider value={{ orbis }}>{children}</OrbisContext.Provider>
+    <OrbisContext.Provider value={orbisProviderValue}>
+      {children}
+    </OrbisContext.Provider>
   );
 };
 

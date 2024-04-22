@@ -18,6 +18,7 @@ export type Post = PostData & {
 
 export type IndividualPost = Post & {
   owner: string;
+  author: string;
 };
 
 export type UploadingPost = {
