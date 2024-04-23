@@ -120,7 +120,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
 
       {address === post.owner && (
         <form onSubmit={submit}>
-          <Center>
+          <Center mt="xs" mb="xs">
             <TextInput
               name="reciever"
               value={postReceiver}
@@ -134,7 +134,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
       )}
 
       {!messagesQueried && isLoading && (
-        <Center>
+        <Center mt="md">
           <Stack
             sx={{
               maxWidth: 700,
