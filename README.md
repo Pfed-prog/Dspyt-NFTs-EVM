@@ -18,7 +18,7 @@
 
 </div>
 
-Pin Save is a decentralized image, video sharing and content aggregation platform where users can not only control the content but also the platform itself.
+Pin Save is a decentralized image, video sharing and content aggregation platform where community controls the platform.
 
 1. The decentralized feed reinforces the discovery of content and feedback.
 2. Decentralized Identity provides anonymity and data protection.
@@ -82,7 +82,6 @@ yarn dev
 - Built React Context for Orbis Client.
 - Enhanced page to update your Profile.
 - Refactoring Orbis types.
-- Reported Bug in [Vercel dynamic catch-all routes](https://github.com/vercel/next.js/issues/64507).
 - Removed faulty Lit Orbis encryption.
 - Connected Vercel Analytics.
 - Built SEO Component and connected on every page.
@@ -106,12 +105,16 @@ Our Roadmap includes:
 
 - Further enhancing SEO
 - Fixing faulty Dweb ipfs provider
+- Adding more Ipfs providers
 - Researching further erc 725 contract and available registry contracts
 - Deploying erc 725 contract once again and syncing orbis profiles
-- Testing Ipfs providers
 - Improving Upload page with batch mint
 - Improving Upload page UX and UI
 - Improving posts contract to contain function to display metadata
+- Deploying PinSavePosts Contract V2 that contains function:
+  - metadata function supported by marketplaces such as OpenSea
+  - add new function similar to `tokenIdsOf` return uint instead of bytes
+  - add a function to query posts by `bytes` `tokenId`
 
 Some interesting links for developers:
 
