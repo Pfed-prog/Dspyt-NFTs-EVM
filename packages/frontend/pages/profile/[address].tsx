@@ -38,6 +38,7 @@ function Post() {
     isLoading,
     isFetched,
   } = useProfile(String(userAddress));
+
   return (
     <div>
       <PageSEO
@@ -92,15 +93,12 @@ function Post() {
                   <Title order={2}>{profileQueried?.username ?? ""}</Title>
                   <Title order={2}>{ensName ?? ""}</Title>
 
-                  <Text mt={15} mx="auto">
-                    {profileQueried?.description ?? ""}
-                  </Text>
-
-                  <Group mt={10} position="center">
-                    <Group position="center" mt="md" mb="xs">
+                  <Group mt="md" mb="xs">
+                    <Text mx="auto">{profileQueried?.description ?? ""}</Text>
+                    <Group mx="auto">
                       <TwoPersonsIcon />
-                      <Text> Followers: {profileQueried?.followers ?? 0} </Text>
-                      <Text> Following: {profileQueried?.following ?? 0} </Text>
+                      <Text>Followers: {profileQueried?.followers ?? 0}</Text>
+                      <Text>Following: {profileQueried?.following ?? 0}</Text>
                     </Group>
                   </Group>
                 </Card>

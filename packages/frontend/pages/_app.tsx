@@ -3,7 +3,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import type { NextComponentType } from "next";
 import type AppProps from "next/app";
-import { Analytics } from "@vercel/analytics/react";
+
 import {
   LivepeerConfig,
   createReactClient,
@@ -12,15 +12,16 @@ import {
 import { MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { Chain, optimism, mainnet } from "wagmi/chains";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 
-import LayoutApp from "@/components/Layout";
 import { OrbisProvider } from "context";
+import LayoutApp from "@/components/Layout";
 
 type NextAppProps<P = any> = AppProps & {
   pageProps: P;
