@@ -87,6 +87,7 @@ function Post() {
                   mx="auto"
                   style={{
                     maxWidth: 400,
+                    minWidth: 300,
                     maxHeight: 600,
                     width: "95%",
                   }}
