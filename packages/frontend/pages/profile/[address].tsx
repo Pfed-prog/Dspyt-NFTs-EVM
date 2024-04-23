@@ -70,6 +70,7 @@ function Post() {
                   alt={profileQueried?.username ?? ""}
                   unoptimized={true}
                   style={{
+                    maxHeight: 800,
                     width: "80%",
                     height: "50%",
                     borderRadius: "10px",
@@ -86,21 +87,24 @@ function Post() {
                   mx="auto"
                   style={{
                     maxWidth: 400,
+                    minWidth: 300,
                     maxHeight: 600,
                     width: "95%",
                   }}
                 >
                   <Title order={2}>{profileQueried?.username ?? ""}</Title>
                   <Title order={2}>{ensName ?? ""}</Title>
+                  <Text mx="auto">{profileQueried?.description ?? ""}</Text>
 
-                  <Group mt="md" mb="xs">
-                    <Text mx="auto">{profileQueried?.description ?? ""}</Text>
-                    <Group mx="auto">
-                      <TwoPersonsIcon />
-                      <Text>Followers: {profileQueried?.followers ?? 0}</Text>
-                      <Text>Following: {profileQueried?.following ?? 0}</Text>
-                    </Group>
-                  </Group>
+                  <Center mt="md">
+                    <TwoPersonsIcon />
+                    <Text ml="xs">
+                      {`Followers: ${profileQueried?.followers ?? 0}`}
+                    </Text>
+                    <Text ml="xs">{`Following: ${
+                      profileQueried?.following ?? 0
+                    }`}</Text>
+                  </Center>
                 </Card>
               </Stack>
             </Center>

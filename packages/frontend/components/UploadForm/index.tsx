@@ -235,8 +235,8 @@ const UploadForm = () => {
                 />
                 <TextInput
                   onChange={(event) => {
-                    setEnsName(event.target.value as string);
                     event.preventDefault();
+                    setEnsName(event.target.value as string);
                   }}
                   value={ensName}
                   label="ENS name"
