@@ -1,7 +1,8 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import { Contract, InfuraProvider } from "ethers";
+
 import { ObjectJsonMetadata, fetchDecodedPost } from "@/services/fetchCid";
 import { getContractInfo } from "@/utils/contracts";
-import { Contract, InfuraProvider } from "ethers";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,17 +19,24 @@ export default async function handler(
 
     const contract: Contract = new Contract(address, abi, provider);
 
-    const linkMetadata: string = await contract.getPostCid(id);
+    const postData: {
+      author: string;
+      cid: string;
+      id: string;
+      tokenId: string;
+    } = await contract.postByTokenId(id);
 
-    const objectJsonMetadata: ObjectJsonMetadata =
-      await fetchDecodedPost(linkMetadata);
-
-    const author: string = await contract.getPostAuthor(id);
+    const objectJsonMetadata: ObjectJsonMetadata = await fetchDecodedPost(
+      postData.cid
+    );
     const owner: string = await contract.getPostOwner(id);
 
-    res
-      .status(200)
-      .json({ ...objectJsonMetadata, author: author, owner: owner });
+    res.status(200).json({
+      ...objectJsonMetadata,
+      author: postData.author,
+      owner: owner,
+      tokenIdBytes: postData.tokenId,
+    });
   } catch (err) {
     res.status(500).send({ error: "failed to fetch data" + err });
   }

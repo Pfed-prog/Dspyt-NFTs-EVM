@@ -1,6 +1,12 @@
-import { useState } from "react";
-import { useAccount } from "wagmi";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import {
+  useAccount,
+  useContractWrite,
+  useNetwork,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 
 import {
   Paper,
@@ -18,10 +24,11 @@ import { FaLaughSquint } from "react-icons/fa";
 import { Heart } from "tabler-icons-react";
 
 import type { IndividualPost } from "@/services/upload";
-import { sendMessage, sendReaction } from "@/services/orbis";
-import { useMessages } from "@/hooks/api";
 import { useOrbisContext } from "context";
+import { useMessages } from "@/hooks/api";
+import { sendMessage, sendReaction } from "@/services/orbis";
 import { timeConverter } from "@/utils/time";
+import { getContractInfo } from "@/utils/contracts";
 
 interface IMyProps {
   post: IndividualPost;
@@ -30,7 +37,12 @@ interface IMyProps {
 
 const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
   const { orbis } = useOrbisContext();
-  const { isConnected } = useAccount();
+  const { chain } = useNetwork();
+  const { address } = useAccount();
+  const { address: contractAddress, abi } = getContractInfo(chain?.id);
+
+  const [postReceiver, setPostReceiver] = useState<`0x${string}` | undefined>();
+
   const [newMessage, setNewMessage] = useState<string>("");
   const [page, setPage] = useState<number>(0);
 
@@ -40,6 +52,35 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
     isLoading,
     refetch,
   } = useMessages(orbisTag, page);
+
+  const { config } = usePrepareContractWrite({
+    address: contractAddress,
+    abi,
+    functionName: "transfer",
+    args: [address, postReceiver, post.tokenIdBytes, true, ""],
+  });
+  const { data, write: writeMintPost } = useContractWrite(config);
+
+  useWaitForTransaction({
+    hash: data?.hash,
+    onSettled() {
+      refetch();
+    },
+  });
+
+  useEffect(() => {
+    if (postReceiver) {
+      writeMintPost?.();
+      setPostReceiver(undefined);
+    }
+  }, [postReceiver, data]);
+
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const reciever = formData.get("reciever") as `0x${string}`;
+    setPostReceiver(reciever);
+  }
 
   return (
     <Paper shadow="sm" p="md" withBorder>
@@ -53,7 +94,7 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
         <Text my={2}>{post.description}</Text>
       </Paper>
 
-      <Text style={{ fontSize: "small", color: "#0000008d" }}>
+      <Text mt="xs" style={{ fontSize: "small", color: "#0000008d" }}>
         Author:{" "}
         <a style={{ color: "#198b6eb9" }} href={`/profile/${post.author}`}>
           {post.author.substring(
@@ -76,6 +117,21 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
             post.owner.substring(35)}
         </a>
       </Text>
+
+      {address === post.owner && (
+        <form onSubmit={submit}>
+          <Center>
+            <TextInput
+              name="reciever"
+              value={postReceiver}
+              placeholder="Provide new address to your post"
+            />
+            <Button ml="xs" type="submit">
+              Transfer
+            </Button>
+          </Center>
+        </form>
+      )}
 
       {!messagesQueried && isLoading && (
         <Center>
@@ -152,7 +208,6 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
                 </Button>
                 <Button
                   size="xs"
-                  component="a"
                   radius="sm"
                   rightIcon={<FaLaughSquint size={22} />}
                   ml={4}
@@ -170,7 +225,6 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
                 <Button
                   color="blue"
                   size="xs"
-                  component="a"
                   radius="sm"
                   ml={4}
                   rightIcon={<BiDislike size={22} />}
@@ -233,9 +287,8 @@ const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
           placeholder="Enter your message"
           sx={{ maxWidth: "240px" }}
         />
-        {isConnected ? (
+        {address ? (
           <Button
-            component="a"
             ml="xs"
             radius="lg"
             onClick={async () =>
