@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
-import { Box, Button, Center, Title, Loader } from "@mantine/core";
+import { useRef, useCallback, useMemo } from "react";
+import { Box, Center, Title, Loader } from "@mantine/core";
 
 import type { Post } from "@/services/upload";
 import PostCard from "@/components/Posts/PostCard";
@@ -10,27 +10,45 @@ import { usePosts } from "@/hooks/api";
 const Home: NextPage = () => {
   const {
     data: posts,
-    isFetching: isLoading,
+    isFetching,
+    isLoading,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
   } = usePosts("optimism");
-  const [fetchedPosts, setFetchedPosts] = useState<Post[]>();
 
-  useEffect(() => {
-    if (posts?.pages) {
-      const items = posts?.pages;
-      const result = Object.keys(items).map((key) => items[Number(key)].items);
-      setFetchedPosts([...result.flat()]);
-    }
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const lastElement = useCallback(
+    (node: HTMLDivElement) => {
+      if (isLoading) return;
+
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetching) {
+          fetchNextPage();
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [fetchNextPage, hasNextPage, isFetching, isLoading]
+  );
+
+  const fetchedPosts = useMemo(() => {
+    return posts?.pages.reduce((acc, page) => {
+      return [...acc, ...page.items];
+    }, []);
   }, [posts]);
 
   return (
     <div>
       <PageSEO />
+
       <Title order={1} className="fade-in-text">
         PinSave Home Page
       </Title>
+
       <Box
         mx="auto"
         mt={20}
@@ -42,30 +60,19 @@ const Home: NextPage = () => {
           gridTemplateRows: "masonry",
         }}
       >
-        {fetchedPosts?.map((post: Post) => {
-          return <PostCard post={post} key={post.token_id} />;
-        })}
+        {fetchedPosts &&
+          fetchedPosts?.map((post: Post) => {
+            return (
+              <Center ref={lastElement}>
+                <PostCard post={post} key={post.token_id} />
+              </Center>
+            );
+          })}
       </Box>
 
-      {isLoading && (
+      {isFetching && (
         <Center mt={24}>
           <Loader color="blue" />
-        </Center>
-      )}
-
-      {posts && posts.pages.length > 0 && (
-        <Center my={14}>
-          <Button
-            mx="auto"
-            onClick={() => fetchNextPage()}
-            disabled={!hasNextPage || isFetchingNextPage}
-          >
-            {isFetchingNextPage
-              ? "Loading more..."
-              : hasNextPage
-              ? "Load More"
-              : "Nothing more to load"}
-          </Button>
         </Center>
       )}
     </div>

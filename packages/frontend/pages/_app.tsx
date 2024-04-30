@@ -53,7 +53,18 @@ const { connectors } = getDefaultWallets({
 });
 
 function MyApp({ Component, pageProps }: NextAppProps) {
-  const queryClient = new QueryClient();
+  const queryClient = useMemo(() => {
+    return new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: 3,
+          retryDelay: 10000,
+          staleTime: Infinity,
+        },
+      },
+    });
+  }, []);
+
   const livepeerClient = useMemo(() => {
     return createReactClient({
       provider: studioProvider({

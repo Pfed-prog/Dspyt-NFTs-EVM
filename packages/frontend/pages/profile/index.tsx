@@ -44,7 +44,10 @@ const Upload = () => {
         const responseIsConnected = await orbis.isConnected();
 
         if (responseIsConnected === false) {
-          const responseConnect = await orbis.connect_v2({ chain: "ethereum" });
+          const responseConnect = await orbis.connect_v2({
+            chain: "ethereum",
+            lit: false,
+          });
           setUser(responseConnect.details);
         }
         if (responseIsConnected !== false) {

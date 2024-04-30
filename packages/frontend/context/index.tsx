@@ -24,7 +24,7 @@ export const OrbisProvider = ({ children }: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     async function connectOrbis() {
-      await orbis.connect_v2({ chain: "ethereum" });
+      await orbis.connect_v2({ chain: "ethereum", lit: false });
     }
     if (senderAddress) {
       connectOrbis();

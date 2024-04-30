@@ -12,42 +12,40 @@ interface IMyProps {
 
 const PostCard: React.FC<IMyProps> = ({ post }) => {
   return (
-    <Center>
-      <Link href={`/optimism/posts/${post.token_id}`}>
-        <Paper
-          component="div"
-          withBorder
-          radius="lg"
-          shadow="md"
-          p="md"
-          sx={{ cursor: "pointer" }}
-        >
-          {IsNotMp4(post.image) ? (
-            <Image
-              src={post.image}
-              alt={post.name}
-              height={200}
-              width={200}
-              sizes="200px"
-              style={{ objectFit: "cover", borderRadius: "10px" }}
-            />
-          ) : (
-            <Player
-              src={post.image}
-              muted
-              autoUrlUpload={{
-                fallback: true,
-                ipfsGateway: "https://w3s.link",
-              }}
-              aspectRatio="1to1"
-            />
-          )}
-          <Text align="center" mt="sm" lineClamp={1}>
-            {post.name}
-          </Text>
-        </Paper>
-      </Link>
-    </Center>
+    <Link href={`/optimism/posts/${post.token_id}`}>
+      <Paper
+        component="div"
+        withBorder
+        radius="lg"
+        shadow="md"
+        p="md"
+        sx={{ cursor: "pointer" }}
+      >
+        {IsNotMp4(post.image) ? (
+          <Image
+            src={post.image}
+            alt={post.name}
+            height={200}
+            width={200}
+            sizes="200px"
+            style={{ objectFit: "cover", borderRadius: "10px" }}
+          />
+        ) : (
+          <Player
+            src={post.image}
+            muted
+            autoUrlUpload={{
+              fallback: true,
+              ipfsGateway: "https://w3s.link",
+            }}
+            aspectRatio="1to1"
+          />
+        )}
+        <Text align="center" mt="sm" lineClamp={1}>
+          {post.name}
+        </Text>
+      </Paper>
+    </Link>
   );
 };
 
