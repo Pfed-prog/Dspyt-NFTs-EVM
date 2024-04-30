@@ -10,7 +10,8 @@ export async function fetchJson(resURL: string, resURL2: string) {
   let item;
   try {
     item = await fetch(resURL).then((x) => x.json());
-  } catch {
+  } catch (e) {
+    console.log("fetchJson error", e);
     item = await fetch(resURL2).then((x) => x.json());
   }
   return item;
@@ -46,7 +47,7 @@ export async function parseString(result: string) {
     const resURL2: string = parseCidDweb(result);
     return [resURL, resURL2];
   }
-  throw new Error("nothing fetched");
+  throw new Error(`${result}: no ipfs link`);
 }
 
 export async function fetchMetadata(
@@ -78,14 +79,14 @@ export async function fetchDecodedPost(cidMetadata: string) {
       };
       return output;
     } catch (e) {
-      console.log(e);
+      console.log("fetchImage", e);
       return {
         ...objectJsonMetadata,
         image: "/fail.webp",
       };
     }
   } catch (e) {
-    console.log(e);
+    console.log("fetchMetadata", e);
     return {
       name: "Failed",
       description: "F for Failure",
