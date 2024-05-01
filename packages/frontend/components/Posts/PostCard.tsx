@@ -1,5 +1,5 @@
 import { Player } from "@livepeer/react";
-import { Paper, Text, Center } from "@mantine/core";
+import { Paper, Text } from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,17 +31,38 @@ const PostCard: React.FC<IMyProps> = ({ post }) => {
             style={{ objectFit: "cover", borderRadius: "10px" }}
           />
         ) : (
-          <Player
-            src={post.image}
-            muted
-            autoUrlUpload={{
-              fallback: true,
-              ipfsGateway: "https://w3s.link",
+          <div
+            style={{
+              objectFit: "cover",
+              borderRadius: "10px",
+              width: 200,
             }}
-            aspectRatio="1to1"
-          />
+          >
+            <Player
+              src={post.image}
+              muted={true}
+              autoPlay
+              loop
+              controls={{
+                autohide: 1000,
+                defaultVolume: 0,
+              }}
+              autoUrlUpload={{
+                fallback: true,
+                ipfsGateway: "https://w3s.link",
+              }}
+              aspectRatio="1to1"
+            />
+          </div>
         )}
-        <Text align="center" mt="sm" lineClamp={1}>
+        <Text
+          align="center"
+          mt="sm"
+          lineClamp={1}
+          style={{
+            width: 200,
+          }}
+        >
           {post.name}
         </Text>
       </Paper>
