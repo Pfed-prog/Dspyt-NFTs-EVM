@@ -22,7 +22,7 @@ Pin Save is a decentralized image, video sharing and content aggregation platfor
 
 1. The decentralized feed reinforces the discovery of content and feedback.
 2. Decentralized Identity provides anonymity and data protection.
-3. Upgradeable, resilient, and open decentralized storage.
+3. Upgradeable, resilient decentralized storage.
 4. Smart contracts to securely serve web experiences directly to users.
 
 ## Features
@@ -57,7 +57,9 @@ Pin Save is a decentralized image, video sharing and content aggregation platfor
 
 ### Optimism Smart contracts
 
-[Optimism Smart contracts](https://optimistic.etherscan.io/address/0x40F320CD3Cd616E59599568c4eA011E2eE49a175#code)
+[Optimism Smart contract Etherscan](https://optimistic.etherscan.io/address/0x40F320CD3Cd616E59599568c4eA011E2eE49a175#code)
+
+[PinSave on EVM Explorer](https://evmexplorer.com/contracts/optimism/0x40F320CD3Cd616E59599568c4eA011E2eE49a175)
 
 ### Ceramic Orbis Context
 
@@ -77,7 +79,7 @@ yarn dev
 ## Latest Updates
 
 - Integrated ENS Name and Avatar resolver on Profile Display. [luc.eth profile](https://evm.pinsave.app/profile/0x225f137127d9067788314bc7fcc1f36746a3c3B5).
-- Integrated ENS useEnsAddress hook from wagmin on upload page.
+- Integrated ENS useEnsAddress hook from wagmi on upload page.
 - Built API route and React-Query for Pin Save Comments.
 - Built React Context for Orbis Client.
 - Enhanced page to update your Profile.
