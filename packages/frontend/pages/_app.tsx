@@ -1,6 +1,9 @@
 import "@/styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
-import LayoutApp from "@/components/Layout";
+
+import type { NextComponentType } from "next";
+import type AppProps from "next/app";
+
 import {
   LivepeerConfig,
   createReactClient,
@@ -9,15 +12,16 @@ import {
 import { MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import NextHead from "next/head";
 import { useMemo } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { Chain, goerli, optimism } from "wagmi/chains";
+import { Chain, optimism, mainnet } from "wagmi/chains";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
-import type { NextComponentType } from "next";
-import type AppProps from "next/app";
+
+import { OrbisProvider } from "context";
+import LayoutApp from "@/components/Layout";
 
 type NextAppProps<P = any> = AppProps & {
   pageProps: P;
@@ -31,7 +35,7 @@ export interface MyWalletOptions {
 }
 
 const { chains, publicClient } = configureChains(
-  [optimism, goerli],
+  [optimism, mainnet],
   [
     publicProvider(),
     jsonRpcProvider({
@@ -44,12 +48,23 @@ const { chains, publicClient } = configureChains(
 
 const { connectors } = getDefaultWallets({
   appName: "PinSave",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID as string,
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID,
   chains,
 });
 
 function MyApp({ Component, pageProps }: NextAppProps) {
-  const queryClient = new QueryClient();
+  const queryClient = useMemo(() => {
+    return new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: 3,
+          retryDelay: 10000,
+          staleTime: Infinity,
+        },
+      },
+    });
+  }, []);
+
   const livepeerClient = useMemo(() => {
     return createReactClient({
       provider: studioProvider({
@@ -73,20 +88,20 @@ function MyApp({ Component, pageProps }: NextAppProps) {
     >
       <QueryClientProvider client={queryClient}>
         <WagmiConfig config={wagmiConfig}>
-          <NextHead>
-            <title>Pin Save - decentralized Pinterest</title>
-          </NextHead>
           <NotificationsProvider>
             <RainbowKitProvider chains={chains}>
               <LivepeerConfig client={livepeerClient}>
-                <LayoutApp>
-                  <Component {...pageProps} />
-                </LayoutApp>
+                <OrbisProvider>
+                  <LayoutApp>
+                    <Component {...pageProps} />
+                  </LayoutApp>
+                </OrbisProvider>
               </LivepeerConfig>
             </RainbowKitProvider>
           </NotificationsProvider>
         </WagmiConfig>
       </QueryClientProvider>
+      <Analytics />
     </MantineProvider>
   );
 }

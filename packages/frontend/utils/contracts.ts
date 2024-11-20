@@ -6,9 +6,8 @@ export function getContractInfo(chain?: number) {
       address: "0x40F320CD3Cd616E59599568c4eA011E2eE49a175" as `0x${string}`,
       abi: LSP8PinSave.abi,
     };
-
   return {
-    address: "0x3c64eE37168c56DD590062d6355F7A2F06511423" as `0x${string}`,
+    address: "0x40F320CD3Cd616E59599568c4eA011E2eE49a175" as `0x${string}`,
     abi: LSP8PinSave.abi,
   };
 }

@@ -1,27 +1,28 @@
+import { ActionIcon, SimpleGrid, LoadingOverlay } from "@mantine/core";
+import { NextRouter, useRouter } from "next/router";
+import { ArrowLeft } from "tabler-icons-react";
+
+import type { ChainName } from "@/constants/chains";
 import MediaDetails from "@/components/Post/MediaDetails";
 import DisplayMedia from "@/components/Post/DisplayMedia";
+import { PageSEO } from "@/components/SEO";
 import { usePost } from "@/hooks/api";
-import { getCurrentChain } from "@/utils/chains";
-
-import { ActionIcon, SimpleGrid, LoadingOverlay, Center } from "@mantine/core";
-import { useRouter } from "next/router";
-import { ArrowLeft } from "tabler-icons-react";
-import { ChainName } from "@/constants/chains";
 
 const PostPage = () => {
-  const router = useRouter();
-  const currentChain: ChainName = getCurrentChain(10);
-
-  const { data: postQueried, isLoading } = usePost(
-    currentChain,
-    String(router.query.id)
-  );
-
+  const router: NextRouter = useRouter();
+  const currentChain: ChainName = "optimism";
+  const postId: string = String(router.query.id);
+  const orbisTag: string = `${currentChain}: ${postId}`;
+  const { data: postQueried, isLoading } = usePost(currentChain, postId);
   return (
     <div>
+      <PageSEO
+        title={`Pin Save Post ${orbisTag}`}
+        description={`Pin Save Post ${orbisTag}`}
+      />
       <LoadingOverlay visible={isLoading} />
       {postQueried && (
-        <>
+        <div>
           <ActionIcon
             onClick={() => router.back()}
             mb="md"
@@ -38,12 +39,10 @@ const PostPage = () => {
               { maxWidth: "md", cols: 1, spacing: "md" },
             ]}
           >
-            <Center>
-              <DisplayMedia post={postQueried} />
-            </Center>
-            <MediaDetails post={postQueried} currentChain={currentChain} />
+            <DisplayMedia post={postQueried} />
+            <MediaDetails post={postQueried} orbisTag={orbisTag} />
           </SimpleGrid>
-        </>
+        </div>
       )}
     </div>
   );

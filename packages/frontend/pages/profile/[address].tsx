@@ -1,5 +1,5 @@
-import { useProfile } from "@/hooks/api";
-
+import { useRouter } from "next/router";
+import Image from "next/image";
 import {
   BackgroundImage,
   Box,
@@ -11,21 +11,44 @@ import {
   Stack,
   LoadingOverlay,
 } from "@mantine/core";
-import { useRouter } from "next/router";
-import Image from "next/image";
+import { mainnet, useEnsName, useEnsAvatar } from "wagmi";
+
+import { PageSEO } from "@/components/SEO";
+import TwoPersonsIcon from "@/components/Icons/TwoPersonsIcon";
+import { useProfile } from "@/hooks/api";
 
 function Post() {
   const router = useRouter();
-  const { address } = router.query;
 
-  const { data: profileQueried, isLoading } = useProfile(String(address));
+  const { address } = router.query;
+  const userAddress = address as `0x${string}` | undefined;
+
+  const { data: ensName } = useEnsName({
+    address: userAddress,
+    chainId: mainnet.id,
+  });
+
+  const { data: ensAvatar } = useEnsAvatar({
+    name: ensName,
+    chainId: 1,
+  });
+
+  const {
+    data: profileQueried,
+    isLoading,
+    isFetched,
+  } = useProfile(String(userAddress));
 
   return (
-    <>
-      {profileQueried ? (
+    <div>
+      <PageSEO
+        title={`Pin Save Profile Page ${address}`}
+        description={`Pin Save decentralized Profile Page ${address}`}
+      />
+      {isFetched ? (
         <Box sx={{ maxWidth: 1200, textAlign: "center" }} mx="auto">
           <BackgroundImage
-            src={profileQueried.cover}
+            src={profileQueried?.cover ?? "/background.png"}
             radius="xs"
             style={{
               height: "auto",
@@ -36,18 +59,18 @@ function Post() {
               <Stack
                 spacing="xs"
                 sx={{
-                  height: 400,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
                 <Image
                   height={600}
-                  width={550}
-                  src={profileQueried.pfp}
-                  alt={profileQueried.username}
+                  width={600}
+                  src={profileQueried?.pfp ?? ensAvatar ?? "/Rectangle.png"}
+                  alt={profileQueried?.username ?? ""}
                   unoptimized={true}
                   style={{
+                    maxHeight: 800,
                     width: "80%",
                     height: "50%",
                     borderRadius: "10px",
@@ -63,36 +86,25 @@ function Post() {
                   withBorder
                   mx="auto"
                   style={{
-                    minHeight: 120,
+                    maxWidth: 400,
+                    minWidth: 300,
+                    maxHeight: 600,
+                    width: "95%",
                   }}
                 >
-                  <Center>
-                    <Title order={2}>{profileQueried.username}</Title>
+                  <Title order={2}>{profileQueried?.username ?? ""}</Title>
+                  <Title order={2}>{ensName ?? ""}</Title>
+                  <Text mx="auto">{profileQueried?.description ?? ""}</Text>
+
+                  <Center mt="md">
+                    <TwoPersonsIcon />
+                    <Text ml="xs">
+                      {`Followers: ${profileQueried?.followers ?? 0}`}
+                    </Text>
+                    <Text ml="xs">{`Following: ${
+                      profileQueried?.following ?? 0
+                    }`}</Text>
                   </Center>
-                  <Center mt={15}>
-                    <Text mx="auto">{profileQueried.description}</Text>
-                  </Center>
-                  <Group mt={10} position="center">
-                    <Group position="center" mt="md" mb="xs">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="icon icon-tabler icon-tabler-users"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0m-2 14v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2m1 -17.87a4 4 0 0 1 0 7.75m5 10.12v-2a4 4 0 0 0 -3 -3.85"></path>
-                      </svg>
-                      <Text> Followers: {profileQueried.followers} </Text>
-                      <Text> Following: {profileQueried.following} </Text>
-                    </Group>
-                  </Group>
                 </Card>
               </Stack>
             </Center>
@@ -101,7 +113,7 @@ function Post() {
       ) : (
         <LoadingOverlay visible={isLoading} />
       )}
-    </>
+    </div>
   );
 }
 

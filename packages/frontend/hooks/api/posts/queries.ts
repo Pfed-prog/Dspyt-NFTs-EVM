@@ -8,10 +8,11 @@ export const postKeys = {
 
 export const fetchPosts = async (
   chain: ChainName,
-  { pageParam = 1 }: { pageParam?: number } = {},
+  { pageParam = 1 }: { pageParam?: number } = {}
 ) => {
   try {
-    return await fetcher(`/api/${chain}/pages/${pageParam}`);
+    const apiRoute: string = `/api/${chain}/pages/${pageParam}`;
+    return await fetcher(apiRoute);
   } catch (error) {
     console.error("Error fetching posts:", error);
     throw error;

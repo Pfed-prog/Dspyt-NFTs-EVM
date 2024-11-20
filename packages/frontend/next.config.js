@@ -10,11 +10,16 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "pinsave.app",
+        hostname: "**.pinsave.app",
+      },
+      {
+        protocol: "https",
+        hostname: "ipfs.io",
+        pathname: "/ipfs/**",
       },
     ],
     minimumCacheTTL: 31536000,
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

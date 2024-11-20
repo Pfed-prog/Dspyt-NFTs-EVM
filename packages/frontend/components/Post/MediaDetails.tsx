@@ -1,11 +1,13 @@
-import { timeConverter } from "@/utils/time";
-import { getContractInfo } from "@/utils/contracts";
-import { sendMessage, sendReaction } from "@/services/orbis";
-import type { ChainName } from "@/constants/chains";
-import type { IndividualPost } from "@/services/upload";
-import { useMessages } from "@/hooks/api";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import {
+  useAccount,
+  useContractWrite,
+  useNetwork,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 
-import { useState } from "react";
 import {
   Paper,
   Button,
@@ -13,38 +15,72 @@ import {
   Text,
   Group,
   Avatar,
-  Switch,
   Title,
+  Center,
+  Stack,
 } from "@mantine/core";
 import { BiDislike } from "react-icons/bi";
 import { FaLaughSquint } from "react-icons/fa";
 import { Heart } from "tabler-icons-react";
-import { Orbis } from "@orbisclub/orbis-sdk";
-import { useAccount } from "wagmi";
-import Image from "next/image";
 
-const context =
-  "kjzl6cwe1jw147hcck185xfdlrxq9zv0y0hoa6shzskqfnio56lhf8190yaei7w";
+import type { IndividualPost } from "@/services/upload";
+import { useOrbisContext } from "context";
+import { useMessages } from "@/hooks/api";
+import { sendMessage, sendReaction } from "@/services/orbis";
+import { timeConverter } from "@/utils/time";
+import { getContractInfo } from "@/utils/contracts";
 
 interface IMyProps {
   post: IndividualPost;
-  currentChain: ChainName;
+  orbisTag: string;
 }
 
-const orbis: IOrbis = new Orbis();
+const MediaDetails: React.FC<IMyProps> = ({ post, orbisTag }) => {
+  const { orbis } = useOrbisContext();
+  const { chain } = useNetwork();
+  const { address } = useAccount();
+  const { address: contractAddress, abi } = getContractInfo(chain?.id);
 
-const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
-  const [isEncrypted, setIsEncrypted] = useState(false);
+  const [postReceiver, setPostReceiver] = useState<`0x${string}` | undefined>();
 
   const [newMessage, setNewMessage] = useState<string>("");
+  const [page, setPage] = useState<number>(0);
 
-  const [orbisResponse, setOrbisResponse] = useState<any>();
+  const {
+    data: messagesQueried,
+    isFetched,
+    isLoading,
+    refetch,
+  } = useMessages(orbisTag, page);
 
-  const { address } = getContractInfo();
+  const { config } = usePrepareContractWrite({
+    address: contractAddress,
+    abi,
+    functionName: "transfer",
+    args: [address, postReceiver, post.tokenIdBytes, true, ""],
+  });
+  const { data, write: writeMintPost } = useContractWrite(config);
 
-  const { isConnected } = useAccount();
+  useWaitForTransaction({
+    hash: data?.hash,
+    onSettled() {
+      refetch();
+    },
+  });
 
-  const { data: messagesQueried, isLoading } = useMessages("0");
+  useEffect(() => {
+    if (postReceiver) {
+      writeMintPost?.();
+      setPostReceiver(undefined);
+    }
+  }, [postReceiver, data]);
+
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const reciever = formData.get("reciever") as `0x${string}`;
+    setPostReceiver(reciever);
+  }
 
   return (
     <Paper shadow="sm" p="md" withBorder>
@@ -57,7 +93,20 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
       >
         <Text my={2}>{post.description}</Text>
       </Paper>
-      <p style={{ fontSize: "small", color: "#0000008d" }}>
+
+      <Text mt="xs" style={{ fontSize: "small", color: "#0000008d" }}>
+        Author:{" "}
+        <a style={{ color: "#198b6eb9" }} href={`/profile/${post.author}`}>
+          {post.author.substring(
+            post.author.indexOf(":0x") + 1,
+            post.author.indexOf(":0x") + 8
+          ) +
+            "..." +
+            post.author.substring(35)}
+        </a>
+      </Text>
+
+      <Text style={{ fontSize: "small", color: "#0000008d" }}>
         Owned by:{" "}
         <a style={{ color: "#198b6eb9" }} href={`/profile/${post.owner}`}>
           {post.owner.substring(
@@ -67,95 +116,170 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
             "..." +
             post.owner.substring(35)}
         </a>
-      </p>
-      {messagesQueried?.data.map((message: any, i: number) => (
-        <Paper
-          key={i}
-          shadow="xs"
-          mt={4}
-          sx={{ backgroundColor: "#80c7fc1d" }}
-          withBorder
-          px="xl"
-        >
-          <Group spacing="xs">
-            <Avatar size={40} color="blue">
-              <Image
-                width={36}
-                height={30}
-                src={message.creator_details.profile?.pfp}
-                alt="profile"
-                unoptimized={true}
-                style={{
-                  borderRadius: "5px",
-                }}
-              />
-            </Avatar>
-            <Text mt={3}>
-              <a
-                href={`/profile/${message.creator.substring(
-                  message.creator.indexOf(":0x") + 1
-                )}`}
-                style={{ color: "#198b6eb9", fontSize: "smaller" }}
-              >
-                {message.creator_details.profile?.username ??
-                  message.creator.substring(
-                    message.creator.indexOf(":0x") + 1,
-                    message.creator.indexOf(":0x") + 8
-                  ) + "..."}
-              </a>
-              : {message.content.body}
-            </Text>
-          </Group>
-          <Group>
-            <Button
-              color="red"
-              size="xs"
-              component="a"
-              radius="sm"
-              rightIcon={<Heart fill="white" />}
-              onClick={() =>
-                sendReaction(message.stream_id, "like", orbis, setOrbisResponse)
-              }
+      </Text>
+
+      {address === post.owner && (
+        <form onSubmit={submit}>
+          <Center mt="xs" mb="xs">
+            <TextInput
+              name="reciever"
+              value={postReceiver}
+              placeholder="Provide new address to your post"
+            />
+            <Button ml="xs" type="submit">
+              Transfer
+            </Button>
+          </Center>
+        </form>
+      )}
+
+      {!messagesQueried && isLoading && (
+        <Center mt="md">
+          <Stack
+            sx={{
+              maxWidth: 700,
+            }}
+          >
+            <Text>Loading...</Text>
+          </Stack>
+        </Center>
+      )}
+
+      {isFetched && (
+        <div>
+          {messagesQueried?.data.map((message: IOrbisPost) => (
+            <Paper
+              key={message.stream_id}
+              shadow="xs"
+              mt={4}
+              sx={{ backgroundColor: "#80c7fc1d" }}
+              withBorder
+              px="xl"
             >
-              {message.count_likes}
+              <Group spacing="xs">
+                <Avatar size={40} color="blue">
+                  <Image
+                    width={36}
+                    height={30}
+                    src={message.creator_details.profile?.pfp ?? "/Pin.png"}
+                    alt="profile"
+                    unoptimized={true}
+                    style={{
+                      borderRadius: "5px",
+                    }}
+                  />
+                </Avatar>
+                <Text mt={3}>
+                  <a
+                    href={`/profile/${message.creator.substring(
+                      message.creator.indexOf(":0x") + 1
+                    )}`}
+                    style={{ color: "#198b6eb9", fontSize: "smaller" }}
+                  >
+                    {message.creator_details.profile?.username ??
+                      message.creator.substring(
+                        message.creator.indexOf(":0x") + 1,
+                        message.creator.indexOf(":0x") + 8
+                      ) + "..."}
+                  </a>
+                  :
+                  {message.content.encryptedBody
+                    ? " encrypted message"
+                    : " " + message.content.body}
+                </Text>
+              </Group>
+              <Group>
+                <Button
+                  color="red"
+                  size="xs"
+                  component="a"
+                  radius="sm"
+                  rightIcon={<Heart fill="white" />}
+                  onClick={async () =>
+                    await sendReaction(message.stream_id, "like", orbis).then(
+                      () =>
+                        setTimeout(() => {
+                          refetch();
+                        }, 1000)
+                    )
+                  }
+                >
+                  {message.count_likes}
+                </Button>
+                <Button
+                  size="xs"
+                  radius="sm"
+                  rightIcon={<FaLaughSquint size={22} />}
+                  ml={4}
+                  onClick={async () =>
+                    await sendReaction(message.stream_id, "haha", orbis).then(
+                      () =>
+                        setTimeout(() => {
+                          refetch();
+                        }, 1000)
+                    )
+                  }
+                >
+                  {message.count_haha}
+                </Button>
+                <Button
+                  color="blue"
+                  size="xs"
+                  radius="sm"
+                  ml={4}
+                  rightIcon={<BiDislike size={22} />}
+                  onClick={async () =>
+                    await sendReaction(
+                      message.stream_id,
+                      "downvote",
+                      orbis
+                    ).then(() =>
+                      setTimeout(() => {
+                        refetch();
+                      }, 1000)
+                    )
+                  }
+                >
+                  {message.count_downvotes}
+                </Button>
+                <Text sx={{ fontSize: "small" }}>
+                  {timeConverter(message.timestamp)}
+                </Text>
+              </Group>
+            </Paper>
+          ))}
+
+          <Text my={10}>Current Page: {page + 1}</Text>
+          <Center>
+            <Button
+              onClick={() => {
+                setPage((page) => page - 1);
+                setTimeout(() => {
+                  refetch();
+                }, 1000);
+              }}
+              mx="auto"
+              disabled={page === 0}
+            >
+              prev
             </Button>
             <Button
-              size="xs"
-              component="a"
-              radius="sm"
-              rightIcon={<FaLaughSquint size={22} />}
-              ml={4}
-              onClick={() =>
-                sendReaction(message.stream_id, "haha", orbis, setOrbisResponse)
-              }
+              onClick={() => {
+                setPage((page) => page + 1);
+                setTimeout(() => {
+                  refetch();
+                }, 1000);
+              }}
+              mx="auto"
+              disabled={messagesQueried?.hasMoreMessages === false}
             >
-              {message.count_haha}
+              next
             </Button>
-            <Button
-              color="blue"
-              size="xs"
-              component="a"
-              radius="sm"
-              ml={4}
-              rightIcon={<BiDislike size={22} />}
-              onClick={() =>
-                sendReaction(
-                  message.stream_id,
-                  "downvote",
-                  orbis,
-                  setOrbisResponse
-                )
-              }
-            >
-              {message.count_downvotes}
-            </Button>
-            <Text sx={{ fontSize: "small" }}>
-              {timeConverter(message.timestamp)}
-            </Text>
-          </Group>
-        </Paper>
-      ))}
-      <Group>
+          </Center>
+        </div>
+      )}
+
+      <Center>
         <TextInput
           my="lg"
           onChange={(e) => setNewMessage(e.target.value)}
@@ -163,33 +287,26 @@ const MediaDetails: React.FC<IMyProps> = ({ post, currentChain }) => {
           placeholder="Enter your message"
           sx={{ maxWidth: "240px" }}
         />
-        <Text>Only for PinSave holders:</Text>
-        <Switch onClick={() => setIsEncrypted((prevCheck) => !prevCheck)} />
-      </Group>
-      {isConnected ? (
-        <Button
-          component="a"
-          radius="lg"
-          onClick={async () =>
-            (await sendMessage(
-              context,
-              isEncrypted,
-              orbis,
-              newMessage,
-              currentChain,
-              address,
-              currentChain,
-              setOrbisResponse
-            )) && setNewMessage("")
-          }
-        >
-          Send Message
-        </Button>
-      ) : (
-        <Text sx={{ marginLeft: "20px" }}>
-          Connect Wallet to send messages and reactions
-        </Text>
-      )}
+        {address ? (
+          <Button
+            ml="xs"
+            radius="lg"
+            onClick={async () =>
+              (await sendMessage(orbis, newMessage, orbisTag).then(() =>
+                setTimeout(() => {
+                  refetch();
+                }, 1000)
+              )) && setNewMessage("")
+            }
+          >
+            Send Message
+          </Button>
+        ) : (
+          <Text sx={{ marginLeft: "20px" }}>
+            Connect Wallet to send messages and reactions
+          </Text>
+        )}
+      </Center>
     </Paper>
   );
 };

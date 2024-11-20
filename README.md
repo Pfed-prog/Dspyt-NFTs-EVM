@@ -18,46 +18,54 @@
 
 </div>
 
-Pin Save is a decentralized image, video sharing and content aggregation platform where users can not only control the content but also the platform itself.
+Pin Save is a decentralized image, video sharing and content aggregation platform where community controls the platform.
 
 1. The decentralized feed reinforces the discovery of content and feedback.
-2. Decentralized Identity (ERC-725), which provides anonymity and data protection.
-3. Upgradeable, resilient, and open decentralized storage.
+2. Decentralized Identity provides anonymity and data protection.
+3. Upgradeable, resilient decentralized storage.
 4. Smart contracts to securely serve web experiences directly to users.
 
 ## Features
 
-- Decentralized feed of NFTs on Optimism and Ethereum Goerli chains with decentralized storage on IPFS with NFTPort, Estuary and Nft.storage:
+- Decentralized feed of NFTs on Optimism chain with decentralized storage on IPFS with NFTPort, Estuary and Nft.storage:
 
-![decentralized feed](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/feed.png)
+![decentralized feed](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/feed.png)
 
-- Decentralized Lit Access Control encrypted comments section on orbis, ceramic and ipfs connected to a decentralized post and identity:
+- Decentralized comments section on orbis, ceramic and ipfs connected to a decentralized Pin Save identity, decentralized Pin Save post and ENS:
 
-![decentralized comments](https://bafybeicvm4vqutptj2nxr4iej75tdgnjkc7fv7zez52uyq2laoswnsz6de.ipfs.w3s.link/Screenshot%20from%202023-01-09%2023-18-48.png)
+![decentralized comments](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/comments.png)
 
 - Decentralized Profile:
 
-![decentralized Profile](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/profile.png)
+![decentralized Profile](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/profile.png)
+
+- Decentralized Profile ENS resolution:
+
+![Pin Save ENS resolution Profile](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/ensProfile.png)
+
+- Pin Save update your profile page:
+
+![Pin Save update your profile page](https://raw.githubusercontent.com/PinSaveDAO/PinSave-EVM/evm/assets/updateProfile.png)
 
 - Video and Image posting:
 
-![Upload](https://bafybeiaj46fxgxax6z3nd45n7p42rh7dbyweyssi3dunr3wfewh7ys2d7y.ipfs.nftstorage.link/)
+![Pin Save Upload](https://bafybeiaj46fxgxax6z3nd45n7p42rh7dbyweyssi3dunr3wfewh7ys2d7y.ipfs.nftstorage.link/)
 
 - Livepeer Video Player:
 
 ![Video Player](https://bafybeiacg6yoxvxvk2ayugwlcfnnjpm5kcchvy3t2fl7mu64ft4zt4fs6m.ipfs.nftstorage.link/)
 
-## Experimental Features
+### Optimism Smart contracts
 
-- Mina Merkle Trees:
+[Optimism Smart contract Etherscan](https://optimistic.etherscan.io/address/0x40F320CD3Cd616E59599568c4eA011E2eE49a175#code)
 
-![Mina Merkle Trees](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/Mina.png)
+[PinSave on EVM Explorer](https://evmexplorer.com/contracts/optimism/0x40F320CD3Cd616E59599568c4eA011E2eE49a175)
 
-- Mina App State API:
+### Ceramic Orbis Context
 
-`localhost:3000/api/mina` route displays Mina Contract App state
+[More information about Orbis Contexts](https://docs.useorbis.com/docs/primitives/contexts)
 
-![Mina Api](https://github.com/dspytdao/PinSave-EVM/blob/master/assets/MinaApi.png)
+[Ceramic Scan Indexer Stream Data](https://cerscan.com/mainnet/stream/kjzl6cwe1jw147hcck185xfdlrxq9zv0y0hoa6shzskqfnio56lhf8190yaei7w)
 
 ## Setup
 
@@ -68,21 +76,49 @@ yarn
 yarn dev
 ```
 
-## Latest Update
+## Latest Updates
 
-- Abstracted orbis and ipfs fetching in the application code.
-- We added more ipfs public servers to improve the loading of CIDs.
-- Removed faulty ipfs servers.
-- Added Optimism mainnet blockchain.
-- Upgraded solidity contract to set the minting fee.
-- Migrated to [https://pinsave.app](https://pinsave.app).
-- Experimenting with Mina merkle trees.
+- Integrated ENS Name and Avatar resolver on Profile Display. [luc.eth profile](https://evm.pinsave.app/profile/0x225f137127d9067788314bc7fcc1f36746a3c3B5).
+- Integrated ENS useEnsAddress hook from wagmi on upload page.
+- Built API route and React-Query for Pin Save Comments.
+- Built React Context for Orbis Client.
+- Enhanced page to update your Profile.
+- Refactoring Orbis types.
+- Removed faulty Lit Orbis encryption.
+- Connected Vercel Analytics.
+- Built SEO Component and connected on every page.
+- Fixed NFTPort as ipfs provider.
 
 ## Further Resources
 
-[PinSave Figma Resources](https://www.figma.com/community/file/1102944149244783025)
+- [PinSave Figma Resources](https://www.figma.com/community/file/1102944149244783025)
+- [Zk Ok Pin Save](https://zkok.io/mina/pin-save/)
+- [EthBucharest 2024: Zero Knowledge proofs on Mina, zkPassport and SoulBound NFTs](https://docs.google.com/presentation/d/1OmJJgzk4iFbKexqBw87oU7oh4H9lXlFFh3eas0EF9y8/edit?usp=sharing)
+- [PinSave.app DR](https://ahrefs.com/website-authority-checker/?input=pinsave.app)
+- [Npm Pin Save mina package](https://www.npmjs.com/package/pin-mina)
+- [Pin Save on Dspyt](https://dspyt.com/PinSave)
+- [Pin Save retroPGF3](https://round3.optimism.io/projects/0xc613e2a991ce0dbcf8fae1d6128e67543da9710e14831112fba654cc8fe8c389)
 
-Some interesting links that we keep returning to include and not limited to:
+## RoadMap
+
+We are at the stage where we need to improve read and write speeds for the content on PinSave.
+
+Our Roadmap includes:
+
+- Further enhancing SEO
+- Fixing faulty Dweb ipfs provider
+- Adding more Ipfs providers
+- Researching further erc 725 contract and available registry contracts
+- Deploying erc 725 contract once again and syncing orbis profiles
+- Improving Upload page with batch mint
+- Improving Upload page UX and UI
+- Improving posts contract to contain function to display metadata
+- Deploying PinSavePosts Contract V2 that contains function:
+  - metadata function supported by marketplaces such as OpenSea
+  - add new function similar to `tokenIdsOf` return uint instead of bytes
+  - add a function to query posts by `bytes` `tokenId`
+
+Some interesting links for developers:
 
 - [Practical React Query](https://tkdodo.eu/blog/practical-react-query)
 - [next/image](https://nextjs.org/docs/api-reference/next/image)

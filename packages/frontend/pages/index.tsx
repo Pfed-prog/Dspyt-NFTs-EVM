@@ -1,66 +1,81 @@
-import PostCard from "@/components/Posts/PostCard";
-import { usePosts } from "@/hooks/api";
-import { getChainApiRouteName } from "@/utils/chains";
-import type { Post } from "@/services/upload";
-import type { ChainName } from "@/constants/chains";
-
-import { Box, Button, Center, Loader } from "@mantine/core";
-import { useNetwork, Chain } from "wagmi";
 import type { NextPage } from "next";
+import { useRef, useCallback, useMemo } from "react";
+import { Box, Center, Title, Loader } from "@mantine/core";
+
+import type { Post } from "@/services/upload";
+import PostCard from "@/components/Posts/PostCard";
+import { PageSEO } from "@/components/SEO";
+import { usePosts } from "@/hooks/api";
 
 const Home: NextPage = () => {
-  const { chain } = useNetwork();
-
-  const initialChain: ChainName = getChainApiRouteName(chain as Chain);
-
   const {
     data: posts,
-    isFetching: isLoading,
+    isFetching,
+    isLoading,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
-  } = usePosts(initialChain);
+  } = usePosts("optimism");
+
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const lastElement = useCallback(
+    (node: HTMLDivElement) => {
+      if (isLoading) return;
+
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetching) {
+          fetchNextPage();
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [fetchNextPage, hasNextPage, isFetching, isLoading]
+  );
+
+  const fetchedPosts = useMemo(() => {
+    return posts?.pages.reduce((acc, page) => {
+      return [...acc, ...page.items];
+    }, []);
+  }, [posts]);
 
   return (
-    <>
-      {posts?.pages.map((page, i: number) => (
-        <Box
-          mx="auto"
-          sx={{
-            maxWidth: 1500,
-            gap: 20,
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 5fr))",
-            gridTemplateRows: "masonry",
-          }}
-          key={i}
-        >
-          {page.items.map((post: Post) => {
-            return <PostCard post={post} key={post.token_id} />;
+    <div>
+      <PageSEO />
+
+      <Title order={1} className="fade-in-text">
+        PinSave Home Page
+      </Title>
+
+      <Box
+        mx="auto"
+        mt={20}
+        sx={{
+          maxWidth: 1500,
+          gap: 20,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 5fr))",
+          gridTemplateRows: "masonry",
+        }}
+      >
+        {fetchedPosts &&
+          fetchedPosts?.map((post: Post) => {
+            return (
+              <Center ref={lastElement} key={post.token_id}>
+                <PostCard post={post} />
+              </Center>
+            );
           })}
-        </Box>
-      ))}
-      {(isLoading || isFetchingNextPage) && (
-        <Center>
-          <Loader size="xl" my={4} />
+      </Box>
+
+      {isFetching && (
+        <Center mt={24}>
+          <Loader color="blue" />
         </Center>
       )}
-      {posts && posts.pages.length > 0 && (
-        <Center my={14}>
-          <Button
-            mx="auto"
-            onClick={() => fetchNextPage()}
-            disabled={!hasNextPage || isFetchingNextPage}
-          >
-            {isFetchingNextPage
-              ? "Loading more..."
-              : hasNextPage
-              ? "Load More"
-              : "Nothing more to load"}
-          </Button>
-        </Center>
-      )}
-    </>
+    </div>
   );
 };
 

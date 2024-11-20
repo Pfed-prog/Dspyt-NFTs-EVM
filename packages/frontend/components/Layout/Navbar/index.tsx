@@ -1,4 +1,7 @@
-// import { UauthButton } from "@/components/auth/UAuthButton";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 import {
   createStyles,
   Text,
@@ -12,9 +15,6 @@ import {
 import { useBooleanToggle } from "@mantine/hooks";
 import { useMediaQuery } from "@mantine/hooks";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -66,7 +66,7 @@ const useStyles = createStyles((theme) => ({
     color:
       theme.colorScheme === "dark"
         ? theme.colors.dark[0]
-        : theme.colors.gray[7],
+        : theme.colors[theme.primaryColor][9],
     fontSize: theme.fontSizes.lg,
     fontWeight: 500,
 
@@ -74,7 +74,7 @@ const useStyles = createStyles((theme) => ({
       backgroundColor:
         theme.colorScheme === "dark"
           ? theme.colors.dark[6]
-          : theme.colors.gray[0],
+          : theme.colors.lime[2],
     },
 
     [theme.fn.smallerThan("sm")]: {
@@ -84,13 +84,19 @@ const useStyles = createStyles((theme) => ({
   },
 
   linkActive: {
-    "&, &:hover": {
+    "&": {
       backgroundColor:
         theme.colorScheme === "dark"
           ? theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.25)
-          : theme.colors[theme.primaryColor][0],
+          : theme.colors.lime[1],
       color:
-        theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 3 : 7],
+        theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 3 : 9],
+    },
+    "&:hover": {
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[6]
+          : theme.colors[theme.primaryColor][2],
     },
   },
 }));
@@ -100,10 +106,21 @@ interface NavbarProps {
 }
 
 export function Navbar({ links }: NavbarProps) {
+  const router = useRouter();
+
   const [opened, toggleOpened] = useBooleanToggle(false);
   const { classes, cx } = useStyles();
-  const router = useRouter();
+
   const largeScreen = useMediaQuery("(min-width: 600px)");
+  const iconLeftPath = largeScreen ? "/PinSaveL.png" : "/Pin.png";
+  const iconWidth = largeScreen ? 140 : 30;
+  const iconHeight = largeScreen ? 35 : 30;
+
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const items = links.map((link) => (
     <Link key={link.label} href={link.link} passHref>
@@ -122,13 +139,15 @@ export function Navbar({ links }: NavbarProps) {
       <Header height={80} mb={10} className={classes.root}>
         <Container className={classes.header}>
           <Link href="/">
-            <Image
-              src={largeScreen ? "/PinSaveL.png" : "/Pin.png"}
-              alt="Pin Save EVM"
-              width={largeScreen ? 140 : 30}
-              height={largeScreen ? 35 : 30}
-              priority
-            />
+            {hasMounted && (
+              <Image
+                src={iconLeftPath}
+                alt="Pin Save EVM"
+                width={iconWidth}
+                height={iconHeight}
+                priority
+              />
+            )}
           </Link>
           <Group spacing={5} className={classes.links}>
             {items}

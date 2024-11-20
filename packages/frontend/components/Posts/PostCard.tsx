@@ -1,24 +1,18 @@
-import { getChainApiRouteName } from "@/utils/chains";
-import { IsNotMp4 } from "@/utils/media";
-import type { Post } from "@/services/upload";
-
 import { Player } from "@livepeer/react";
 import { Paper, Text } from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
-import { useNetwork, Chain } from "wagmi";
+
+import { IsNotMp4 } from "@/utils/media";
+import type { Post } from "@/services/upload";
 
 interface IMyProps {
   post: Post;
 }
 
 const PostCard: React.FC<IMyProps> = ({ post }) => {
-  const { chain } = useNetwork();
-
   return (
-    <Link
-      href={`/${getChainApiRouteName(chain as Chain)}/posts/${post.token_id}`}
-    >
+    <Link href={`/optimism/posts/${post.token_id}`}>
       <Paper
         component="div"
         withBorder
@@ -27,33 +21,48 @@ const PostCard: React.FC<IMyProps> = ({ post }) => {
         p="md"
         sx={{ cursor: "pointer" }}
       >
-        <div
-          style={{
-            position: "relative",
-            height: 200,
-          }}
-        >
-          {IsNotMp4(post.image) ? (
-            <Image
-              src={post.image}
-              alt={post.name}
-              fill
-              sizes="200px"
-              style={{ objectFit: "cover" }}
-            />
-          ) : (
+        {IsNotMp4(post.image) ? (
+          <Image
+            src={post.image}
+            alt={post.name}
+            height={200}
+            width={200}
+            sizes="200px"
+            style={{ objectFit: "cover", borderRadius: "10px" }}
+          />
+        ) : (
+          <div
+            style={{
+              objectFit: "cover",
+              borderRadius: "10px",
+              width: 200,
+            }}
+          >
             <Player
               src={post.image}
-              muted
+              muted={true}
+              autoPlay
+              loop
+              controls={{
+                autohide: 1000,
+                defaultVolume: 0,
+              }}
               autoUrlUpload={{
                 fallback: true,
                 ipfsGateway: "https://w3s.link",
               }}
               aspectRatio="1to1"
             />
-          )}
-        </div>
-        <Text align="center" mt="sm" lineClamp={1}>
+          </div>
+        )}
+        <Text
+          align="center"
+          mt="sm"
+          lineClamp={1}
+          style={{
+            width: 200,
+          }}
+        >
           {post.name}
         </Text>
       </Paper>

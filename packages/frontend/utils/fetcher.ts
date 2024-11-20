@@ -9,12 +9,10 @@ const fetcher = async (input: RequestInfo, params = {}) => {
     referrerPolicy: "no-referrer",
     ...params,
   });
-
   if (!response.ok) {
     throw new Error(response.statusText);
   }
   const data = await response.json();
-
   return data;
 };
 
