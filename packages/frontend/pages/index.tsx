@@ -1,46 +1,24 @@
 import type { NextPage } from "next";
-import { useRef, useCallback, useMemo } from "react";
-import { Box, Center, Title, Loader } from "@mantine/core";
+import Link from "next/link";
+import { Contract, JsonRpcProvider } from "ethers";
+import { Box, Button, Center, Title } from "@mantine/core";
 
-import type { Post } from "@/services/upload";
 import PostCard from "@/components/Posts/PostCard";
 import { PageSEO } from "@/components/SEO";
-import { usePosts } from "@/hooks/api";
+import { fetchDecodedPost } from "@/services/fetchCid";
+import { getContractInfo } from "@/utils/contracts";
 
-const Home: NextPage = () => {
-  const {
-    data: posts,
-    isFetching,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-  } = usePosts("optimism");
+interface Props {
+  posts: PostReduced[];
+}
 
-  const observer = useRef<IntersectionObserver | null>(null);
+type PostReduced = {
+  image: string;
+  name: string;
+  tokenId: number;
+};
 
-  const lastElement = useCallback(
-    (node: HTMLDivElement) => {
-      if (isLoading) return;
-
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetching) {
-          fetchNextPage();
-        }
-      });
-
-      if (node) observer.current.observe(node);
-    },
-    [fetchNextPage, hasNextPage, isFetching, isLoading]
-  );
-
-  const fetchedPosts = useMemo(() => {
-    return posts?.pages.reduce((acc, page) => {
-      return [...acc, ...page.items];
-    }, []);
-  }, [posts]);
-
+const Home: NextPage<Props> = ({ posts }) => {
   return (
     <div>
       <PageSEO />
@@ -60,23 +38,38 @@ const Home: NextPage = () => {
           gridTemplateRows: "masonry",
         }}
       >
-        {fetchedPosts &&
-          fetchedPosts?.map((post: Post) => {
-            return (
-              <Center ref={lastElement} key={post.token_id}>
-                <PostCard post={post} />
-              </Center>
-            );
-          })}
+        {posts.map((post: PostReduced) => {
+          return (
+            <Center key={post.tokenId}>
+              <PostCard post={post} />
+            </Center>
+          );
+        })}
       </Box>
-
-      {isFetching && (
-        <Center mt={24}>
-          <Loader color="blue" />
-        </Center>
-      )}
     </div>
   );
 };
 
 export default Home;
+
+export const getStaticProps = async () => {
+  const { address, abi } = getContractInfo();
+  const provider = new JsonRpcProvider("https://rpc.ankr.com/optimism");
+  const contract: Contract = new Contract(address, abi, provider);
+
+  const posts: PostReduced[] = [];
+
+  const totalSupply = await contract.totalSupply();
+
+  for (let i = 1; i <= totalSupply; i++) {
+    const result = await contract.getPostCid(i);
+    const post = await fetchDecodedPost(result, 150);
+    posts.push({ image: post.image, name: post.name, tokenId: i });
+  }
+  return {
+    props: {
+      posts,
+    },
+    revalidate: 60,
+  };
+};

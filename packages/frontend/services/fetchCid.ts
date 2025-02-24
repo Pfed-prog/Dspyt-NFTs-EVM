@@ -1,9 +1,17 @@
+import { PinataSDK } from "pinata-web3";
+import { PinataSDK as PinataSDK_ } from "pinata";
+
 import { parseCidDweb, parseCidNFTStorage } from "@/services/parseCid";
 
 export type ObjectJsonMetadata = {
   name: string;
   description: string;
   image: string;
+};
+
+export type PinataObject = {
+  data: ObjectJsonMetadata;
+  contentType: string;
 };
 
 export async function fetchJson(resURL: string, resURL2: string) {
@@ -50,13 +58,11 @@ export async function parseString(result: string) {
   throw new Error(`${result}: no ipfs link`);
 }
 
-export async function fetchMetadata(
-  cidMetadata: string
-): Promise<ObjectJsonMetadata> {
+export async function fetchMetadata(cidMetadata: string) {
   const [resURL, resURL2] = await parseString(cidMetadata);
   const objectJsonMetadata: ObjectJsonMetadata = await fetchJson(
     resURL,
-    resURL2
+    resURL2,
   );
   return objectJsonMetadata;
 }
@@ -67,26 +73,67 @@ export async function fetchImage(cidImage: string) {
   return linkImage;
 }
 
-export async function fetchDecodedPost(cidMetadata: string) {
+export async function fetchMetadataPinata(cidMetadata: string) {
+  const pinata = new PinataSDK({
+    pinataJwt: process.env.NEXT_PUBLIC_PINATA_JWT,
+    pinataGateway: process.env.NEXT_PUBLIC_GATEWAY_URL,
+    pinataGatewayKey: process.env.NEXT_PUBLIC_AC,
+  });
+
+  const file = await pinata.gateways.get(cidMetadata);
+  return file.data;
+}
+
+export async function fetchImagePinata(
+  cidImage: string,
+  imageResolution: number,
+) {
+  const pinata = new PinataSDK_({
+    pinataJwt: process.env.NEXT_PUBLIC_PINATA_JWT,
+    pinataGateway: process.env.NEXT_PUBLIC_GATEWAY_URL,
+  });
+  const url = await pinata.gateways
+    .createSignedURL({
+      cid: cidImage,
+      expires: 864000,
+    })
+    .optimizeImage({
+      width: imageResolution,
+      height: imageResolution,
+      format: "webp",
+    });
+  return url;
+}
+
+export async function fetchDecodedPost(
+  cidMetadata: string,
+  imageResolution: number,
+) {
   try {
-    const objectJsonMetadata: ObjectJsonMetadata =
-      await fetchMetadata(cidMetadata);
+    const objectJsonMetadata: unknown = await fetchMetadataPinata(cidMetadata);
+
+    const metadata = objectJsonMetadata as ObjectJsonMetadata;
     try {
-      const decodedImage: string = await fetchImage(objectJsonMetadata.image);
+      const imageCID: string = metadata.image?.replace(
+        "https://gateway.pinata.cloud/ipfs/",
+        "",
+      );
+
+      const decodedImage = await fetchImagePinata(imageCID, imageResolution);
       const output = {
-        ...objectJsonMetadata,
+        name: metadata.name,
+        description: metadata.description,
         image: decodedImage,
       };
       return output;
     } catch (e) {
-      console.log("fetchImage", e);
       return {
-        ...objectJsonMetadata,
+        name: metadata.name,
+        description: metadata.description,
         image: "/fail.webp",
       };
     }
   } catch (e) {
-    console.log("fetchMetadata", e);
     return {
       name: "Failed",
       description: "F for Failure",

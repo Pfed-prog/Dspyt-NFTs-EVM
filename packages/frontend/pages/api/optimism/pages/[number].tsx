@@ -1,21 +1,22 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import { Contract, InfuraProvider } from "ethers";
+
 import { fetchDecodedPost } from "@/services/fetchCid";
 import { getContractInfo } from "@/utils/contracts";
-import { Contract, InfuraProvider } from "ethers";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     const { number } = req.query;
     const pageNumber = Number(number);
 
-    const { address, abi } = getContractInfo(10);
+    const { address, abi } = getContractInfo();
 
     const provider = new InfuraProvider(
       "optimism",
-      process.env.NEXT_PUBLIC_INFURA_OPTIMISM
+      process.env.NEXT_PUBLIC_INFURA_OPTIMISM,
     );
 
     const contract = new Contract(address, abi, provider);
@@ -36,10 +37,9 @@ export default async function handler(
     try {
       for (let i = lowerLimit; upperLimit >= i; i++) {
         result = await contract.getPostCid(i);
+        const item = await fetchDecodedPost(result, 500);
 
-        const item = await fetchDecodedPost(result);
-
-        items.push({ token_id: i, ...item });
+        items.push({ tokenId: i, ...item });
       }
     } catch {
       res.status(200).json({ items: items, totalSupply: totalSupply });

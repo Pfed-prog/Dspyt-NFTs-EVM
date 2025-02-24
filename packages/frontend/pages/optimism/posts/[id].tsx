@@ -12,13 +12,13 @@ const PostPage = () => {
   const router: NextRouter = useRouter();
   const currentChain: ChainName = "optimism";
   const postId: string = String(router.query.id);
-  const orbisTag: string = `${currentChain}: ${postId}`;
+
   const { data: postQueried, isLoading } = usePost(currentChain, postId);
   return (
     <div>
       <PageSEO
-        title={`Pin Save Post ${orbisTag}`}
-        description={`Pin Save Post ${orbisTag}`}
+        title={`PinSave Post ${postId}`}
+        description={`PinSave Post ${postId}`}
       />
       <LoadingOverlay visible={isLoading} />
       {postQueried && (
@@ -40,7 +40,7 @@ const PostPage = () => {
             ]}
           >
             <DisplayMedia post={postQueried} />
-            <MediaDetails post={postQueried} orbisTag={orbisTag} />
+            <MediaDetails post={postQueried} />
           </SimpleGrid>
         </div>
       )}

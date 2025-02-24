@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "pages/api/metis/**/*": {
+      "maxDuration": 60
+    },
+    "pages/**/*": {
+      "maxDuration": 60
+    }
+  }
+}

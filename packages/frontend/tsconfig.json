@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/components/*": ["components/*"],
+      "@/context/*": ["context/*"],
       "@/contracts/*": ["contracts/*"],
       "@/utils/*": ["utils/*"],
       "@/services/*": ["services/*"],
@@ -25,12 +26,6 @@
       "@/constants/*": ["constants/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "environment.d.ts",
-    "Orbis.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
+  "include": ["next-env.d.ts", "environment.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
